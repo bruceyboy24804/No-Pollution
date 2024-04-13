@@ -27,7 +27,7 @@ namespace NoPollution
             updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>().Enabled = false;
             updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>().Enabled = false;
             updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<SewageOutletAISystem>().Enabled = false;
+            
 
 
 
