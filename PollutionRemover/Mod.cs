@@ -7,18 +7,41 @@ using Game.Simulation;
 using UnityEngine.PlayerLoop;
 using Unity.Entities;
 using Colossal.IO.AssetDatabase;
+using Game.Debug;
+using System.Runtime.InteropServices;
 
 
 namespace NoPollution
 {
     public class Mod : IMod
     {
-         internal ModSettings ActiveSettings { get; set; }
-       
+        public static DebugSystem _debugSystem;
+        public static NoisePollutionSystem _noisePollutionSystem;
+        public static NetPollutionSystem _netPollutionSystem;
+        public static BuildingPollutionAddSystem _buildingPollutionAddSystem;
+        public static GroundPollutionSystem _groundPollutionSystem;
+        public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
+        public static WaterPipePollutionSystem _waterPipePollutionSystem;
+        public static AirPollutionSystem _airPollutionSystem;
+        internal ModSettings activeSettings { get; set; }
+        internal static World ActiveWorld { get; private set; }
+
+
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+            ActiveWorld = updateSystem.World;
+            _debugSystem = updateSystem.World.GetOrCreateSystemManaged<DebugSystem>();
+            _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
+            _netPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>();
+            _buildingPollutionAddSystem = updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>();
+            _groundPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundPollutionSystem>();
+            _groundWaterPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>();
+            _waterPipePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>();
+            _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
+           
+
 
             ModSettings activeSettings = new(this);
             activeSettings.RegisterInOptionsUI();
@@ -26,7 +49,7 @@ namespace NoPollution
             Localization.LoadTranslations(activeSettings, log);
 
 
-            AssetDatabase.global.LoadSettings("NoPollution", ActiveSettings, new ModSettings(this));
+            AssetDatabase.global.LoadSettings("NoPollution", activeSettings, new ModSettings(this));
 
 
             log.Info(nameof(OnLoad));
@@ -34,16 +57,6 @@ namespace NoPollution
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
                 log.Info($"Current mod asset at {asset.path}");
 
-
-
-            
-
-            updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>().Enabled = false;
-            updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = false;
         }
 
         public void OnDispose()
