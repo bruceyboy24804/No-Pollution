@@ -7,18 +7,21 @@ using Game.Simulation;
 using UnityEngine.PlayerLoop;
 using Unity.Entities;
 using Colossal.IO.AssetDatabase;
+using Game.Debug;
 
 
 namespace NoPollution
 {
     public class Mod : IMod
     {
-         internal ModSettings ActiveSettings { get; set; }
+        public static DebugSystem _debugSystem;
+         internal ModSettings activeSettings { get; set; }
        
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+            _debugSystem = updateSystem.World.GetOrCreateSystemManaged<DebugSystem>();
 
             ModSettings activeSettings = new(this);
             activeSettings.RegisterInOptionsUI();
@@ -26,7 +29,7 @@ namespace NoPollution
             Localization.LoadTranslations(activeSettings, log);
 
 
-            AssetDatabase.global.LoadSettings("NoPollution", ActiveSettings, new ModSettings(this));
+            AssetDatabase.global.LoadSettings("NoPollution", activeSettings, new ModSettings(this));
 
 
             log.Info(nameof(OnLoad));
