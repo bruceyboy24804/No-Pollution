@@ -58,7 +58,7 @@ namespace NoPollution
             {
                 _noisePollutionSystem = value;
 
-                Mod.ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = value;
+                Mod.ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = ;
             }
         }
 
