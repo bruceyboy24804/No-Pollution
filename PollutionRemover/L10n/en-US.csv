@@ -6,7 +6,6 @@ Options.OPTION_DESCRIPTION:ResetPollution,Resets the ground and air pollution ba
 
 Options.GROUP:PollutionToggles, Toggle the pollution types
 
-
 Options.OPTION:NoisePollution,Noise Pollution
 Options.OPTION_DESCRIPTION:NoisePollution,Allow noise pollution or not (checked means pollution is active)
 

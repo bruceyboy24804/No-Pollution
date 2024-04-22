@@ -9,6 +9,7 @@ using Game.UI;
 using Game.UI.Widgets;
 using JetBrains.Annotations;
 using NoPollution;
+using System;
 using System.Collections.Generic;
 using Unity.Entities;
 using static Colossal.IO.AssetDatabase.GeometryAsset;
@@ -35,6 +36,7 @@ namespace NoPollution
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
 
+        
 
         public ModSettings(IMod mod) : base(mod)
         {
@@ -46,9 +48,12 @@ namespace NoPollution
         {
             set
             {
-                Mod._debugSystem.ResetPollution();
+                
             }
         }
+
+        
+
         [SettingsUISection(PollutionToggles)]
         
         public bool NoisePollution
