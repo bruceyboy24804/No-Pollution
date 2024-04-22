@@ -9,14 +9,14 @@
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
 # No Pollution
-This mod will stop pollution being produced on the map.
+This mod will stop pollution being produced on the map and remove existing Ground, Air, Noise pollution.
 
 ## Functionality 
 This mod will stop noise pollution, ground pollution, air pollution, groundwater pollution. Removing water pollution is not implemented yet but 
 will be added in the future.
 
 ### Small disclaimer 
-It will not remove existing pollution. It will only stop pollution.
+It will remove Ground, Air, Noise pollution and stop. Will stop other pollution types.
 
 ## Roadmap
 * More pollution types for the reset button
@@ -30,8 +30,9 @@ Lots of people have helped me try to make like No Pollution happen. Especially t
 * **DanielNotFound22**
 * **Krzychu124**
 * **Algernon**
+* **Konsi (Mimonsi)**
 
-##Testing 
+**Testing** 
 * **Konsi (Mimonsi)**
 * **augustpower71**
 
@@ -45,7 +46,7 @@ Lots of people have helped me try to make like No Pollution happen. Especially t
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.2" />
+	<ModVersion Value="2.0.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -53,7 +54,8 @@ Lots of people have helped me try to make like No Pollution happen. Especially t
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog Value="" />
 	<ChangeLog>
-	- Added translations for Korean and Chinese. 
+	* Removed the Pollution Reset Button
+	* Reset Pollution functionality has been added to ground, air and noise pollution.
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />

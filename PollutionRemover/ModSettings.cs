@@ -17,13 +17,13 @@ using static Colossal.IO.AssetDatabase.GeometryAsset;
 namespace NoPollution
 {
     [FileLocation(nameof(NoPollution))]
-    [SettingsUIShowGroupName(Reseting, PollutionToggles, PolltionSliders, PollutionMasterSlider)]
-    [SettingsUITabOrder(Reseting, PollutionToggles, PolltionSliders, PollutionMasterSlider)]
-    [SettingsUIGroupOrder(Reseting, PollutionToggles, PolltionSliders, PollutionMasterSlider)]
+    [SettingsUIShowGroupName(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
+    [SettingsUITabOrder(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
+    [SettingsUIGroupOrder(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
 
     public class ModSettings : ModSetting
     {
-        private const string Reseting = "Reseting";
+        
         private const string PollutionToggles = "PollutionToggles";
         private const string PolltionSliders = "PollutionSliders";
         private const string PollutionMasterSlider = "PollutionMasterSlider";
@@ -41,19 +41,6 @@ namespace NoPollution
         public ModSettings(IMod mod) : base(mod)
         {
         }
-
-        [SettingsUISection(Reseting)]
-        [SettingsUIButton]
-        public bool ResetPollution
-        {
-            set
-            {
-                
-            }
-        }
-
-        
-
         [SettingsUISection(PollutionToggles)]
         
         public bool NoisePollution
@@ -62,6 +49,9 @@ namespace NoPollution
             set
             {
                 _noisePollutionSystem = value;
+
+                if (!value)
+                Mod.NoisePollutionResetSystem.ResetPollution();
 
                 Mod.ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = value;
             }
@@ -98,7 +88,10 @@ namespace NoPollution
             get => _groundPollutionSystem;
             set
             {
-                _buildingPollutionAddSystem = value;
+                _groundPollutionSystem = value;
+
+                if (!value)
+                    Mod.GroundPollutionResetSystem.ResetPollution();
 
                 Mod.ActiveWorld.GetOrCreateSystemManaged<GroundPollutionSystem>().Enabled = value;
             }
@@ -132,6 +125,9 @@ namespace NoPollution
             set
             {
                 _airPollutionSystem = value;
+
+                if (!value)
+                    Mod.AirPollutionResetSystem.ResetPollution();
 
                 Mod.ActiveWorld.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = value;
             }
