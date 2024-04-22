@@ -11,11 +11,13 @@ using Game.Debug;
 using System.Runtime.InteropServices;
 
 
+
 namespace NoPollution
 {
     public class Mod : IMod
     {
         public static DebugSystem _debugSystem;
+        public static PrefabSystem _prefabSystem;
         public static NoisePollutionSystem _noisePollutionSystem;
         public static NetPollutionSystem _netPollutionSystem;
         public static BuildingPollutionAddSystem _buildingPollutionAddSystem;
@@ -23,14 +25,19 @@ namespace NoPollution
         public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
         public static WaterPipePollutionSystem _waterPipePollutionSystem;
         public static AirPollutionSystem _airPollutionSystem;
-        internal ModSettings activeSettings { get; set; }
+        internal ModSettings ActiveSettings { get; set; }
         internal static World ActiveWorld { get; private set; }
 
+
+
+         internal ModSettings activeSettings { get; set; }
+       
 
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+
             ActiveWorld = updateSystem.World;
             _debugSystem = updateSystem.World.GetOrCreateSystemManaged<DebugSystem>();
             _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
@@ -40,7 +47,8 @@ namespace NoPollution
             _groundWaterPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>();
             _waterPipePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>();
             _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
-           
+          
+            _debugSystem = updateSystem.World.GetOrCreateSystemManaged<DebugSystem>();
 
 
             ModSettings activeSettings = new(this);

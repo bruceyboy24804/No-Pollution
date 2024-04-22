@@ -2,6 +2,7 @@ Options.SECTION:[Bruceyboy24804.NoPollution],No Pollution
 Options.GROUP:Reseting,Reset Pollution
 Options.OPTION:ResetPollution,Pollution Reset 
 Options.OPTION_DESCRIPTION:ResetPollution,Resets the ground and air pollution back to 0
+<<<<<<< HEAD
 
 Options.GROUP:PollutionToggles, Toggle the pollution types
 
@@ -26,3 +27,5 @@ Options.OPTION_DESCRIPTION:WaterPipePollution,Allow waterpipe pollution or not (
 
 Options.OPTION:AirPollution,Air Pollution
 Options.OPTION_DESCRIPTION:AirPollution,Allow air pollution or not (checked means pollution is active)
+=======
+>>>>>>> 903169bf3e3eac8d972fe3c4e0c9b53a0c153b10
