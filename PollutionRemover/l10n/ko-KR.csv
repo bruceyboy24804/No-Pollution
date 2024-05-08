@@ -1,27 +1,19 @@
 Options.SECTION:[Bruceyboy24804.NoPollution],오염 제거(No Pollution)
-Options.GROUP:Reseting,오염 초기화
-Options.OPTION:ResetPollution,오염 초기화
-Options.OPTION_DESCRIPTION:ResetPollution,지면과 대기 오염을 0으로 초기화합니다.
-
-Options.GROUP:PollutionToggles,오염 여부 선택
-
+Options.GROUP:PollutionToggles,오염 유형 선택
 Options.OPTION:NoisePollution,소음 공해
 Options.OPTION_DESCRIPTION:NoisePollution,소음 공해 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-
 Options.OPTION:NetPollution,넷 오염
 Options.OPTION_DESCRIPTION:NetPollution,넷(도로) 공해 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-
-Options.OPTION:GroundPollution,토양 오염
-Options.OPTION_DESCRIPTION:GroundPollution,토양 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-
 Options.OPTION:BuildingPollution,건물 오염
 Options.OPTION_DESCRIPTION:BuildingPollution,건물 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값이며 대부분 다른 오염시 필요함)
-
-Options.OPTION:GroundWaterPollution,수질 오염
-Options.OPTION_DESCRIPTION:GroundWaterPollution,수질 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-
+Options.OPTION:GroundPollution,토양 오염
+Options.OPTION_DESCRIPTION:GroundPollution,토양 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.OPTION:GroundWaterPollution,지하수 오염
+Options.OPTION_DESCRIPTION:GroundWaterPollution,지하수 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.OPTION:WaterPipePollution,하수관 오염
+Options.OPTION_DESCRIPTION:WaterPipePollution,하수관 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
 Options.OPTION:AirPollution,대기 오염
 Options.OPTION_DESCRIPTION:AirPollution,대기 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-
-Options.OPTION:WaterPipePollution,하수 오염
-Options.OPTION_DESCRIPTION:WaterPipePollution,하수 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.GROUP:PollutionSliders,오염 슬라이더
+Options.OPTION:NoisePollutionControler,오염 생산률
+Options.OPTION_DESCRIPTION:NoisePollutionControler,% 비율로 오염이 생산되는 비율을 조절 할 수 있습니다
