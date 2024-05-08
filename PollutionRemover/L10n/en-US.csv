@@ -1,24 +1,19 @@
 Options.SECTION:[Bruceyboy24804.NoPollution],No Pollution
 Options.GROUP:PollutionToggles, Toggle the pollution types
-
 Options.OPTION:NoisePollution,Noise Pollution
 Options.OPTION_DESCRIPTION:NoisePollution,Allow noise pollution or not (checked means pollution is active and when unchecked will remove existing pollution)
-
 Options.OPTION:NetPollution,Net Pollution
 Options.OPTION_DESCRIPTION:NetPollution,Allow net (road) pollution not (checked means pollution is active)
-
 Options.OPTION:BuildingPollution,Building Pollution
 Options.OPTION_DESCRIPTION:BuildingPollution,Allow buildingadd pollution  (checked means pollution is active, required for most other pollution types)
-
 Options.OPTION:GroundPollution,Ground Pollution
 Options.OPTION_DESCRIPTION:GroundPollution,Allow ground pollution or (checked means pollution is active and when unchecked will remove existing pollution)
-
 Options.OPTION:GroundWaterPollution,GroundWater Pollution
 Options.OPTION_DESCRIPTION:GroundWaterPollution,Allow water pollution or not (Checked means pollution is active)
-
 Options.OPTION:WaterPipePollution,WaterPipe Pollution
 Options.OPTION_DESCRIPTION:WaterPipePollution,Allow waterpipe pollution or not (checked means pollution is active)
-
 Options.OPTION:AirPollution,Air Pollution
 Options.OPTION_DESCRIPTION:AirPollution,Allow air pollution or not (checked means pollution is active and when unchecked will remove existing pollution)
-
+Options.GROUP:PollutionSliders,Pollution Sliders
+Options.OPTION:NoisePollutionControler,Noise Pollution
+Options.OPTION_DESCRIPTION:NoisePollutionControler,Control the % of pollution that is being produced

@@ -46,7 +46,7 @@ Lots of people have helped me try to make like No Pollution happen. Especially t
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.0.0" />
+	<ModVersion Value="2.0.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -54,8 +54,7 @@ Lots of people have helped me try to make like No Pollution happen. Especially t
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog Value="" />
 	<ChangeLog>
-	* Removed the Pollution Reset Button
-	* Reset Pollution functionality has been added to ground, air and noise pollution.
+	* Fixed 2 exceptions and seemed to fix toggles not saving on reload
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />

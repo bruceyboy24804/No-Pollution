@@ -11,6 +11,7 @@ using Game.Debug;
 using System.Runtime.InteropServices;
 using Unity.Jobs;
 using static Game.Rendering.Debug.RenderPrefabRenderer;
+using static Colossal.IO.AssetDatabase.AssetDatabase;
 
 
 
@@ -27,7 +28,8 @@ namespace NoPollution
         public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
         public static WaterPipePollutionSystem _waterPipePollutionSystem;
         public static AirPollutionSystem _airPollutionSystem;
-
+        public static NoisePollutionSystem _noisepollutionMofiier;
+       
 
         internal ModSettings ActiveSettings { get; set; }
         internal static World ActiveWorld { get; private set; }
@@ -44,6 +46,8 @@ namespace NoPollution
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+
+
             instance = this;
             log.Info(nameof(OnLoad));
 
@@ -56,9 +60,11 @@ namespace NoPollution
             _groundWaterPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>();
             _waterPipePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>();
             _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
-
-
-
+            NoisePollutionResetSystem.World = updateSystem.World;
+            GroundPollutionResetSystem.World = updateSystem.World;
+            AirPollutionResetSystem.World = updateSystem.World;
+            _noisepollutionMofiier = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
+            
 
             ModSettings activeSettings = new(this);
             activeSettings.RegisterInOptionsUI();
@@ -68,6 +74,7 @@ namespace NoPollution
 
             AssetDatabase.global.LoadSettings("NoPollution", activeSettings, new ModSettings(this));
 
+            
 
             log.Info(nameof(OnLoad));
 
@@ -75,29 +82,21 @@ namespace NoPollution
                 log.Info($"Current mod asset at {asset.path}");
 
 
-            NoisePollutionResetSystem.World = updateSystem.World;
-            GroundPollutionResetSystem.World = updateSystem.World;
-            AirPollutionResetSystem.World = updateSystem.World;
+           
         }
-
-        public void OnDispose()
-        {
-            
-        }
-
+        
         public class NoisePollutionResetSystem
         {
             public static World World { get; set; }
 
             public static void ResetPollution()
             {
+
                 NoisePollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<NoisePollutionSystem>();
-                log.Info("NoisePollutionSystem created");
 
                 JobHandle dependencies;
                 CellMapData<NoisePollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
-                log.Info("NoisePollution data retrieved");
-
+                
                 dependencies.Complete();
                 log.Info("NoisePollution dependencies completed");
 
@@ -119,11 +118,11 @@ namespace NoPollution
                 GroundPollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<GroundPollutionSystem>();
                 log.Info("GroundPollutionSystem created");
 
-                JobHandle dependencies;
-                CellMapData<GroundPollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
-                log.Info("GroundPollution data retrieved");
+                JobHandle dependencies2;
+                CellMapData<GroundPollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies2);
+                
 
-                dependencies.Complete();
+                dependencies2.Complete();
                 log.Info("GroundPollution dependencies completed");
 
                 for (int j = 0; j < data.m_TextureSize.x * data.m_TextureSize.y; j++)
@@ -142,28 +141,28 @@ namespace NoPollution
             public static void ResetPollution()
             {
                 AirPollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<AirPollutionSystem>();
-                log.Info("AirPollutionSystem created");
+                
                 JobHandle dependencies3;
                 CellMapData<AirPollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies3);
-                log.Info("AirPollution data retrieved");
+                
                 dependencies3.Complete();
 
                 for (int k = 0; k < data.m_TextureSize.x * data.m_TextureSize.y; k++)
                 {
                     data.m_Buffer[k] = default(AirPollution);
                 }
-                log.Info("AirPollutionSystem created");
+                
 
 
 
             }
 
-            public void OnDispose()
-            {
-                log.Info(nameof(OnDispose));
-            }
+            
         }
-
+        public void OnDispose()
+        {
+            log.Info(nameof(OnDispose));
+        }
 
     }
 }

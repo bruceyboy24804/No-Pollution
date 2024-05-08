@@ -1,31 +1,23 @@
-﻿using Colossal;
+﻿
 using Colossal.IO.AssetDatabase;
-using Game;
 using Game.Modding;
-using Game.Net;
 using Game.Settings;
 using Game.Simulation;
 using Game.UI;
-using Game.UI.Widgets;
-using JetBrains.Annotations;
-using NoPollution;
-using System;
-using System.Collections.Generic;
-using Unity.Entities;
-using static Colossal.IO.AssetDatabase.GeometryAsset;
+
 
 namespace NoPollution
 {
     [FileLocation(nameof(NoPollution))]
-    [SettingsUIShowGroupName(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
-    [SettingsUITabOrder(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
-    [SettingsUIGroupOrder(PollutionToggles, PolltionSliders, PollutionMasterSlider)]
+    [SettingsUIShowGroupName(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
+    [SettingsUITabOrder(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
+    [SettingsUIGroupOrder(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
 
     public class ModSettings : ModSetting
     {
         
         private const string PollutionToggles = "PollutionToggles";
-        private const string PolltionSliders = "PollutionSliders";
+        private const string PollutionSliders = "PollutionSliders";
         private const string PollutionMasterSlider = "PollutionMasterSlider";
 
         private bool _noisePollutionSystem = true;
@@ -36,7 +28,7 @@ namespace NoPollution
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
 
-        
+       
 
         public ModSettings(IMod mod) : base(mod)
         {
@@ -132,19 +124,20 @@ namespace NoPollution
                 Mod.ActiveWorld.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = value;
             }
         }
-
+       
 
 
         public override void SetDefaults()
         {
-            bool _noisePollutionSystem = true;
-            bool _netPollutionSystem = true;
-            bool _buildingPollutionAddSystem = true;
-            bool _groundPollutionSystem = true;
-            bool _groundwaterPollutionSystem = true;
-            bool _waterPipePollutionSystem = true;
-            bool _airPollutionSystem = true;
+            _noisePollutionSystem = true;
+            _netPollutionSystem = true;
+            _buildingPollutionAddSystem = true;
+            _groundPollutionSystem = true;
+            _groundwaterPollutionSystem = true;
+            _waterPipePollutionSystem = true;
+            _airPollutionSystem = true;
 
+          
 
         }
         public void Unload()
