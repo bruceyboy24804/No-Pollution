@@ -4,14 +4,10 @@ using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
-using UnityEngine.PlayerLoop;
 using Unity.Entities;
 using Colossal.IO.AssetDatabase;
 using Game.Debug;
-using System.Runtime.InteropServices;
 using Unity.Jobs;
-using static Game.Rendering.Debug.RenderPrefabRenderer;
-using static Colossal.IO.AssetDatabase.AssetDatabase;
 
 
 
@@ -28,8 +24,7 @@ namespace NoPollution
         public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
         public static WaterPipePollutionSystem _waterPipePollutionSystem;
         public static AirPollutionSystem _airPollutionSystem;
-        public static NoisePollutionSystem _noisepollutionMofiier;
-       
+        public static NoisePollutionSystem _noisePollutionResetSystem;
 
         internal ModSettings ActiveSettings { get; set; }
         internal static World ActiveWorld { get; private set; }
@@ -63,7 +58,7 @@ namespace NoPollution
             NoisePollutionResetSystem.World = updateSystem.World;
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
-            _noisepollutionMofiier = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
+           
             
 
             ModSettings activeSettings = new(this);
@@ -80,9 +75,6 @@ namespace NoPollution
 
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
                 log.Info($"Current mod asset at {asset.path}");
-
-
-           
         }
         
         public class NoisePollutionResetSystem
@@ -98,15 +90,11 @@ namespace NoPollution
                 CellMapData<NoisePollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
                 
                 dependencies.Complete();
-                log.Info("NoisePollution dependencies completed");
 
                 for (int i = 0; i < data.m_TextureSize.x * data.m_TextureSize.y; i++)
                 {
                     data.m_Buffer[i] = default(NoisePollution);
                 }
-                log.Info("NoisePollution buffer initialized");
-
-
             }
         }
         public class GroundPollutionResetSystem
@@ -123,16 +111,13 @@ namespace NoPollution
                 
 
                 dependencies2.Complete();
-                log.Info("GroundPollution dependencies completed");
+               
 
                 for (int j = 0; j < data.m_TextureSize.x * data.m_TextureSize.y; j++)
                 {
                     data.m_Buffer[j] = default(GroundPollution);
                 }
-                log.Info("GroundPollutionSystem created");
-
             }
-
         }
         public class AirPollutionResetSystem
         {
@@ -151,19 +136,12 @@ namespace NoPollution
                 {
                     data.m_Buffer[k] = default(AirPollution);
                 }
-                
-
-
-
             }
-
-            
         }
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
         }
-
     }
 }
 

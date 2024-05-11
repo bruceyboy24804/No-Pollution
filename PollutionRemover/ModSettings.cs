@@ -9,16 +9,15 @@ using Game.UI;
 namespace NoPollution
 {
     [FileLocation(nameof(NoPollution))]
-    [SettingsUIShowGroupName(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
-    [SettingsUITabOrder(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
-    [SettingsUIGroupOrder(PollutionToggles, PollutionSliders, PollutionMasterSlider)]
+    [SettingsUIShowGroupName(Resetting, PollutionToggles)]
+    [SettingsUITabOrder(Resetting, PollutionToggles)]
+    [SettingsUIGroupOrder(Resetting, PollutionToggles)]
 
     public class ModSettings : ModSetting
     {
-        
+        private const string Resetting = "Resetting";
         private const string PollutionToggles = "PollutionToggles";
-        private const string PollutionSliders = "PollutionSliders";
-        private const string PollutionMasterSlider = "PollutionMasterSlider";
+       
 
         private bool _noisePollutionSystem = true;
         private bool _netPollutionSystem = true;
@@ -27,12 +26,22 @@ namespace NoPollution
         private bool _groundwaterPollutionSystem = true;
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
+        
 
        
 
         public ModSettings(IMod mod) : base(mod)
         {
         }
+
+        [SettingsUISection(Resetting)]
+        [SettingsUIButton]
+        public bool NoisePollutionReset
+        {
+            set => Mod.NoisePollutionResetSystem.ResetPollution();
+        }
+
+
         [SettingsUISection(PollutionToggles)]
         
         public bool NoisePollution
@@ -42,8 +51,7 @@ namespace NoPollution
             {
                 _noisePollutionSystem = value;
 
-                if (!value)
-                Mod.NoisePollutionResetSystem.ResetPollution();
+               
 
                 Mod.ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = value;
             }
