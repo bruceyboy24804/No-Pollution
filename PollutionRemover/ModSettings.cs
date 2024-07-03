@@ -3,21 +3,27 @@ using Colossal.IO.AssetDatabase;
 using Game.Modding;
 using Game.Settings;
 using Game.Simulation;
-using Game.UI;
+using Game.Tools;
+using System;
 
 
 namespace NoPollution
 {
     [FileLocation(nameof(NoPollution))]
-    [SettingsUIShowGroupName(Resetting, PollutionToggles)]
-    [SettingsUITabOrder(Resetting, PollutionToggles)]
-    [SettingsUIGroupOrder(Resetting, PollutionToggles)]
+    [SettingsUIShowGroupName(Resetting, PollutionToggles, WaterPollution)]
+    [SettingsUITabOrder(Resetting, PollutionToggles, WaterPollution)]
+    [SettingsUIGroupOrder(Resetting, PollutionToggles, WaterPollution)]
+
+
 
     public class ModSettings : ModSetting
     {
         private const string Resetting = "Resetting";
         private const string PollutionToggles = "PollutionToggles";
-       
+        private const string WaterPollution = "WaterPollution";
+
+        private float _m_waterPollutionDecayRate = 1f;
+
 
         private bool _noisePollutionSystem = true;
         private bool _netPollutionSystem = true;
@@ -26,13 +32,18 @@ namespace NoPollution
         private bool _groundwaterPollutionSystem = true;
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
-        
-
-       
+        private float _waterPollutionDecayRate = 1f;
 
         public ModSettings(IMod mod) : base(mod)
         {
+            // Initialize the slider value with the current field value from PollutionDecayRate
+            WaterPollutionDecayRate = PollutionDecayRate.GetPollutionDecayRate() * 100f;
         }
+
+
+
+
+
 
         [SettingsUISection(Resetting)]
         [SettingsUIButton]
@@ -43,7 +54,7 @@ namespace NoPollution
 
 
         [SettingsUISection(PollutionToggles)]
-        
+
         public bool NoisePollution
         {
             get => _noisePollutionSystem;
@@ -51,14 +62,14 @@ namespace NoPollution
             {
                 _noisePollutionSystem = value;
 
-               
+
 
                 Mod.ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>().Enabled = value;
             }
         }
 
         [SettingsUISection(PollutionToggles)]
-        
+
         public bool NetPollution
         {
             get => _netPollutionSystem;
@@ -70,7 +81,7 @@ namespace NoPollution
             }
         }
         [SettingsUISection(PollutionToggles)]
-        
+
         public bool BuildingPollution
         {
             get => _buildingPollutionAddSystem;
@@ -132,8 +143,20 @@ namespace NoPollution
                 Mod.ActiveWorld.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = value;
             }
         }
-       
-
+        [SettingsUISlider(min = 0f, max = 100f, step = 1f, scalarMultiplier = 1f)]
+        [SettingsUISection(WaterPollution)]
+        public float WaterPollutionDecayRate
+        {
+            get => _waterPollutionDecayRate;
+            set
+            {
+                log.Info($"Setting WaterPollutionDecayRate to: {value}");
+                _waterPollutionDecayRate = value;
+                // Update the m_PollutionDecayRate field using PollutionDecayRate
+                PollutionDecayRate.SetPollutionDecayRate(WaterPollutionDecayRate);
+                log.Info($"WaterPollutionDecayRate set to: {_waterPollutionDecayRate}");
+            }
+        }
 
         public override void SetDefaults()
         {
@@ -144,13 +167,20 @@ namespace NoPollution
             _groundwaterPollutionSystem = true;
             _waterPipePollutionSystem = true;
             _airPollutionSystem = true;
+            _waterPollutionDecayRate = 50f;
 
-          
-
+            log.Info("Setting default values...");
+            // Reset the m_PollutionDecayRate field to its default value using WaterPollutionManager
+            PollutionDecayRate.SetPollutionDecayRate(_waterPollutionDecayRate);
+            log.Info("SetDefaults called. Reset WaterPollutionDecayRate to default (50)");
         }
+
         public void Unload()
         {
 
         }
+
     }
+
 }
+ 

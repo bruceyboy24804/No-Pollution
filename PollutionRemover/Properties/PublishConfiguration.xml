@@ -7,60 +7,74 @@
 	<ShortDescription Value="No Pollution will stop/remove all pollution from the map" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>
-# No Pollution
-This mod will stop pollution being produced on the map and remove existing Ground, Air, Noise pollution.
+	<LongDescription># No Pollution Mod
 
-## Functionality 
-This mod will stop noise pollution, ground pollution, air pollution, groundwater pollution. Removing water pollution is not implemented yet but 
-will be added in the future.
+This mod will stop pollution from being produced on the map and remove existing pollution.
 
-### Small disclaimer 
-It will remove Ground, Air, Noise pollution and stop. Will stop other pollution types.
+## Functionality
+
+This mod will:
+- Stop noise pollution
+- Stop ground pollution
+- Stop air pollution
+- Stop groundwater pollution
+- let you control water pollution decay rate with a sldier
+
+		
+## Small Disclaimer
+
+This mod will:
+- Remove Ground, Air, and Noise pollution
+- Stop other pollution types
 
 ## Roadmap
-* More pollution types for the reset button
-* Pollution sliders for each type of pollution
-* Master Pollution slider
+
+- Pollution sliders for each type of pollution
 
 ## Acknowledgment
-Lots of people have helped me try to make like No Pollution happen. Especially the people who I would like to thank are 
-* **89-Pleasure**
-* **Optimus-Code**
-* **DanielNotFound22**
-* **Krzychu124**
-* **Algernon**
-* **Konsi (Mimonsi)**
 
-** Translations** 
-* **TwotoolusFLY_LSh.st** Korean translation
+Lots of people have helped me try to make No Pollution happen. Especially the people who I would like to thank are:
 
-**Testing** 
-* **Konsi (Mimonsi)**
-* **augustpower71**
+- 89-Pleasure
+- Optimus-Code
+- DanielNotFound22
+- Krzychu124
+- Algernon
+- Konsi (Mimonsi)
 
-	</LongDescription>
+## Translations
+
+- TwotoolusFLY_LSh.st - Korean translation
+- Nullpinter - Chinese translation
+
+## Testing
+- Konsi (Mimonsi)
+- augustpower71</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/NoPollutionLogo.png" />
 	<!--Screenshot, can be set multiple times-->
 	<Screenshot Value="Properties/NoPollutionLogo.png" />
+	<Screenshot Value="Properties/Screenshots/AirPollution.png" />
+	<Screenshot Value="Properties/Screenshots/decayrate.png" />
+	<Screenshot Value="Properties/Screenshots/GroundPollution.png" />
+	<Screenshot Value="Properties/Screenshots/NoisePollution.png" />
+	<Screenshot Value="Properties/Screenshots/NoPollutionLogo.jpg" />
+	<Screenshot Value="Properties/Screenshots/ResetPollutionA.png" />
+	<Screenshot Value="Properties/Screenshots/ResetPollutionB.png" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.0.2" />
+	<ModVersion Value="2.2.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="" />
-	<ChangeLog>
-* Maybe a fix for noise pollution
-* Updated korean translations thank to **TwotoolusFLY_LSh.st**
-	</ChangeLog>
+	<ChangeLog>- Added a slider to control the decay rate of water pollution</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />
 	<ExternalLink Type="discord" Url="https://discord.gg/U6t4pEYh" />
 </Publish>
+

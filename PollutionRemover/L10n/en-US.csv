@@ -17,3 +17,8 @@ Options.OPTION:WaterPipePollution,WaterPipe Pollution
 Options.OPTION_DESCRIPTION:WaterPipePollution,Allow waterpipe pollution or not (checked means pollution is active)
 Options.OPTION:AirPollution,Air Pollution
 Options.OPTION_DESCRIPTION:AirPollution,Allow air pollution or not (checked means pollution is active and when unchecked will remove existing pollution)
+Options.GROUP:WaterPollution,Water Pollution Settings
+Options.OPTION:WaterPollutionDecayRate,Water Pollution Decay Rate
+Options.OPTION_DESCRIPTION:WaterPollutionDecayRate,Adjust the rate at which water pollution decays. (0 - 100)
+
+

@@ -1,16 +1,22 @@
-Options.SECTION:[Bruceyboy24804.NoPollution],오염 제거(No Pollution)
-Options.GROUP:PollutionToggles,오염 유형 선택
-Options.OPTION:NoisePollution,소음 공해
-Options.OPTION_DESCRIPTION:NoisePollution,소음 공해 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-Options.OPTION:NetPollution,넷 오염
-Options.OPTION_DESCRIPTION:NetPollution,넷(도로) 공해 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.SECTION:Bruceyboy24804.NoPollution,오염 없음
+Options.GROUP:Resetting,소음 오염 재설정
+Options.OPTION:NoisePollutionReset,소음 오염
+Options.OPTION_DESCRIPTION:NoisePollutionReset,이 버튼을 누르면 소음 오염이 재설정됩니다
+Options.GROUP:PollutionToggles,오염 유형 전환
+Options.OPTION:NoisePollution,소음 오염
+Options.OPTION_DESCRIPTION:NoisePollution,소음 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화)
+Options.OPTION:NetPollution,도로 오염
+Options.OPTION_DESCRIPTION:NetPollution,도로 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화)
 Options.OPTION:BuildingPollution,건물 오염
-Options.OPTION_DESCRIPTION:BuildingPollution,건물 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값이며 대부분 다른 오염시 필요함)
+Options.OPTION_DESCRIPTION:BuildingPollution,건물 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화, 대부분의 다른 오염 유형에 필요)
 Options.OPTION:GroundPollution,토양 오염
-Options.OPTION_DESCRIPTION:GroundPollution,토양 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.OPTION_DESCRIPTION:GroundPollution,토양 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화, 체크 해제 시 기존 오염 제거)
 Options.OPTION:GroundWaterPollution,지하수 오염
-Options.OPTION_DESCRIPTION:GroundWaterPollution,지하수 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
-Options.OPTION:WaterPipePollution,하수관 오염
-Options.OPTION_DESCRIPTION:WaterPipePollution,하수관 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.OPTION_DESCRIPTION:GroundWaterPollution,지하수 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화)
+Options.OPTION:WaterPipePollution,수도관 오염
+Options.OPTION_DESCRIPTION:WaterPipePollution,수도관 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화)
 Options.OPTION:AirPollution,대기 오염
-Options.OPTION_DESCRIPTION:AirPollution,대기 오염 허용 여부를 정합니다 (체크시 허용 및 바닐라 값)
+Options.OPTION_DESCRIPTION:AirPollution,대기 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화, 체크 해제 시 기존 오염 제거)
+Options.GROUP:WaterPollution,수질 오염 설정
+Options.OPTION:WaterPollutionDecayRate,수질 오염 감소율
+Options.OPTION_DESCRIPTION:WaterPollutionDecayRate,수질 오염 감소 비율을 조정하십시오. (0.00 - 1.00)
