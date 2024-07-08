@@ -18,5 +18,5 @@ Options.OPTION_DESCRIPTION:WaterPipePollution,选择是否允许水管污染（�
 Options.OPTION:AirPollution,空气污染
 Options.OPTION_DESCRIPTION:AirPollution,选择是否允许空气污染（选中表示污染激活，取消选中时将移除现有污染）
 Options.GROUP:WaterPollution,水污染设置
-Options.OPTION:WaterPollutionDecayRate,水污染衰减率
-Options.OPTION_DESCRIPTION:WaterPollutionDecayRate,调整水污染衰减的速度。（0.00 - 1.00）
+Options.OPTION:WaterSystem,水污染衰减率
+Options.OPTION_DESCRIPTION:WaterSystem,调整水污染衰减的速度。（0 - 10），0为最慢，10为最快。

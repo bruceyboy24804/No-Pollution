@@ -18,5 +18,5 @@ Options.OPTION_DESCRIPTION:WaterPipePollution,수도관 오염을 허용할지 �
 Options.OPTION:AirPollution,대기 오염
 Options.OPTION_DESCRIPTION:AirPollution,대기 오염을 허용할지 여부를 선택하십시오 (체크 시 오염 활성화, 체크 해제 시 기존 오염 제거)
 Options.GROUP:WaterPollution,수질 오염 설정
-Options.OPTION:WaterPollutionDecayRate,수질 오염 감소율
-Options.OPTION_DESCRIPTION:WaterPollutionDecayRate,수질 오염 감소 비율을 조정하십시오. (0.00 - 1.00)
+Options.OPTION:WaterSystem,수질 오염 감소율
+Options.OPTION_DESCRIPTION:WaterSystem,물 오염 감소 속도를 조절합니다. (0 - 10), 0이 가장 느리고 10이 가장 빠릅니다.

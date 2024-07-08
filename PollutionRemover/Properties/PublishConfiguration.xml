@@ -7,7 +7,8 @@
 	<ShortDescription Value="No Pollution will stop/remove all pollution from the map" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription># No Pollution Mod
+	<LongDescription>
+# No Pollution Mod
 
 This mod will stop pollution from being produced on the map and remove existing pollution.
 
@@ -18,9 +19,8 @@ This mod will:
 - Stop ground pollution
 - Stop air pollution
 - Stop groundwater pollution
-- let you control water pollution decay rate with a sldier
+- Let you control the water pollution decay rate with a slider
 
-		
 ## Small Disclaimer
 
 This mod will:
@@ -41,6 +41,8 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 - Krzychu124
 - Algernon
 - Konsi (Mimonsi)
+- YenYang - for helping me with water pollution (sewage)
+- TDW - for helping with decay rate
 
 ## Translations
 
@@ -49,7 +51,8 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 
 ## Testing
 - Konsi (Mimonsi)
-- augustpower71</LongDescription>
+- augustpower71
+	</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/NoPollutionLogo.png" />
 	<!--Screenshot, can be set multiple times-->
@@ -66,13 +69,13 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.2.0" />
+	<ModVersion Value="2.2.2" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>- Added a slider to control the decay rate of water pollution</ChangeLog>
+	<ChangeLog>- Changed how the water pollution decay rate works</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />
 	<ExternalLink Type="discord" Url="https://discord.gg/U6t4pEYh" />

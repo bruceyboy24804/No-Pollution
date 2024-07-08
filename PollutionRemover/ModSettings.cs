@@ -4,7 +4,10 @@ using Game.Modding;
 using Game.Settings;
 using Game.Simulation;
 using Game.Tools;
+using Game.UI;
 using System;
+using Unity.Entities;
+using UnityEngine;
 
 
 namespace NoPollution
@@ -22,9 +25,9 @@ namespace NoPollution
         private const string PollutionToggles = "PollutionToggles";
         private const string WaterPollution = "WaterPollution";
 
-        private float _m_waterPollutionDecayRate = 1f;
+       
 
-
+        
         private bool _noisePollutionSystem = true;
         private bool _netPollutionSystem = true;
         private bool _buildingPollutionAddSystem = true;
@@ -32,12 +35,14 @@ namespace NoPollution
         private bool _groundwaterPollutionSystem = true;
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
-        private float _waterPollutionDecayRate = 1f;
+        private float _waterPollutionDecayRate = 10f;
+        private bool _waterPollutionDecayIsntant = false;
+        
+        
 
         public ModSettings(IMod mod) : base(mod)
         {
-            // Initialize the slider value with the current field value from PollutionDecayRate
-            WaterPollutionDecayRate = PollutionDecayRate.GetPollutionDecayRate() * 100f;
+           
         }
 
 
@@ -143,20 +148,42 @@ namespace NoPollution
                 Mod.ActiveWorld.GetOrCreateSystemManaged<AirPollutionSystem>().Enabled = value;
             }
         }
-        [SettingsUISlider(min = 0f, max = 100f, step = 1f, scalarMultiplier = 1f)]
         [SettingsUISection(WaterPollution)]
-        public float WaterPollutionDecayRate
+
+        public bool WaterPollutionDecayInstant
+        {
+            get => _waterPollutionDecayIsntant;
+            set
+            {
+                _waterPollutionDecayRate = 1000000000f;
+                WaterSystem waterSystem = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<WaterSystem>();
+                waterSystem.m_PollutionDecayRate = 1000000000f;
+
+            }
+
+        }
+    
+    
+
+          
+        
+           
+        [SettingsUISection(WaterPollution)]
+        [SettingsUISlider(min = 0, max = 1000, step = 1, scalarMultiplier = 0.0001f)]
+        [SettingsUIDisableByCondition(typeof(ModSettings), nameof(WaterPollutionDecayInstant))]
+        public float WaterSystem
         {
             get => _waterPollutionDecayRate;
             set
             {
-                log.Info($"Setting WaterPollutionDecayRate to: {value}");
                 _waterPollutionDecayRate = value;
-                // Update the m_PollutionDecayRate field using PollutionDecayRate
-                PollutionDecayRate.SetPollutionDecayRate(WaterPollutionDecayRate);
-                log.Info($"WaterPollutionDecayRate set to: {_waterPollutionDecayRate}");
+                WaterSystem waterSystem = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<WaterSystem>();
+                waterSystem.m_PollutionDecayRate = value;
+                
             }
         }
+
+       
 
         public override void SetDefaults()
         {
@@ -167,12 +194,8 @@ namespace NoPollution
             _groundwaterPollutionSystem = true;
             _waterPipePollutionSystem = true;
             _airPollutionSystem = true;
-            _waterPollutionDecayRate = 50f;
-
-            log.Info("Setting default values...");
-            // Reset the m_PollutionDecayRate field to its default value using WaterPollutionManager
-            PollutionDecayRate.SetPollutionDecayRate(_waterPollutionDecayRate);
-            log.Info("SetDefaults called. Reset WaterPollutionDecayRate to default (50)");
+            _waterPollutionDecayRate = 10f;
+            
         }
 
         public void Unload()

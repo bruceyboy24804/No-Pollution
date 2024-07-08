@@ -35,6 +35,7 @@ namespace NoPollution
         public World World { get; private set; }
 
         internal ModSettings activeSettings { get; set; }
+        
 
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         private Mod instance;
@@ -56,12 +57,13 @@ namespace NoPollution
             _waterPipePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>();
             _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
             _waterSystem = updateSystem.World.GetOrCreateSystemManaged<WaterSystem>();
-           
-           
+            
+
 
             NoisePollutionResetSystem.World = updateSystem.World;
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
+            
             
            
 
@@ -141,6 +143,7 @@ namespace NoPollution
                 }
             }
         }
+
 
         public void OnDispose()
         {
