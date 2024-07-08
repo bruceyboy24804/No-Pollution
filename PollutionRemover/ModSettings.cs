@@ -35,10 +35,9 @@ namespace NoPollution
         private bool _groundwaterPollutionSystem = true;
         private bool _waterPipePollutionSystem = true;
         private bool _airPollutionSystem = true;
-        private float _waterPollutionDecayRate = 10f;
         private bool _waterPollutionDecayIsntant = false;
-        
-        
+        private float _waterPollutionDecayRate = 10f;
+
 
         public ModSettings(IMod mod) : base(mod)
         {
@@ -155,21 +154,20 @@ namespace NoPollution
             get => _waterPollutionDecayIsntant;
             set
             {
-                _waterPollutionDecayRate = 1000000000f;
-                WaterSystem waterSystem = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<WaterSystem>();
-                waterSystem.m_PollutionDecayRate = 1000000000f;
+                _waterPollutionDecayIsntant = value;
+                if (value)
+                {
+                    WaterSystem waterSystem = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<WaterSystem>();
+                    waterSystem.m_PollutionDecayRate = 1000f;
+                }
+                
 
             }
 
         }
     
-    
-
-          
-        
-           
         [SettingsUISection(WaterPollution)]
-        [SettingsUISlider(min = 0, max = 1000, step = 1, scalarMultiplier = 0.0001f)]
+        [SettingsUISlider(min = 1, max = 100, step = 1, scalarMultiplier = 0.0001f)]
         [SettingsUIDisableByCondition(typeof(ModSettings), nameof(WaterPollutionDecayInstant))]
         public float WaterSystem
         {
@@ -177,8 +175,9 @@ namespace NoPollution
             set
             {
                 _waterPollutionDecayRate = value;
+
                 WaterSystem waterSystem = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<WaterSystem>();
-                waterSystem.m_PollutionDecayRate = value;
+                waterSystem.m_PollutionDecayRate = _waterPollutionDecayRate;
                 
             }
         }
