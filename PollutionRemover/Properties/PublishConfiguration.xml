@@ -21,6 +21,12 @@ This mod will:
 - Stop groundwater pollution
 - Let you control the water pollution decay rate with a slider
 
+## Whats New:
+- Added a new slider to control the Ground pollution.
+- Added a new slider to control the Air pollution.
+- Added a new slider to control the Noise pollution.
+- Added reset pollution buttons for Ground, Air, and Noise pollution.
+
 ## Small Disclaimer
 
 This mod will:
@@ -28,8 +34,9 @@ This mod will:
 - Stop other pollution types
 
 ## Roadmap
+- Pollution Master slider
+- Dynamic pollution for ground, air, and noise pollutions. 
 
-- Pollution sliders for each type of pollution
 
 ## Acknowledgment
 
@@ -43,6 +50,7 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 - Konsi (Mimonsi)
 - YenYang - for helping me with water pollution (sewage)
 - TDW - for helping with decay rate
+
 
 ## Translations
 
@@ -69,13 +77,13 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.2.2" />
+	<ModVersion Value="2.3.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>- Changed how the water pollution decay rate works</ChangeLog>
+	<ChangeLog>- Revemped how no pollution for noise, air and ground works....More drastic changed will be coming soon</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />
 	<ExternalLink Type="discord" Url="https://discord.gg/U6t4pEYh" />

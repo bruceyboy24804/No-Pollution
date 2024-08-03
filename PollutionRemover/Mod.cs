@@ -6,10 +6,11 @@ using Game.SceneFlow;
 using Game.Simulation;
 using Unity.Entities;
 using Colossal.IO.AssetDatabase;
-using Game.Debug;
 using Unity.Jobs;
-using System;
-using System.Reflection;
+using Game.Debug;
+using NoPollution.Querys.GroundPollution;
+using static NoPollution.Setting;
+using NoPollution.Querys.AirPollution;
 
 
 
@@ -17,8 +18,11 @@ namespace NoPollution
 {
     public class Mod : IMod
     {
-       
+        public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
+        private Mod instance;
+        public static Setting m_Setting;
 
+        public static Mod Instance { get; private set; }
         public static DebugSystem _debugSystem;
         public static PrefabSystem _prefabSystem;
         public static NoisePollutionSystem _noisePollutionSystem;
@@ -26,26 +30,23 @@ namespace NoPollution
         public static BuildingPollutionAddSystem _buildingPollutionAddSystem;
         public static GroundPollutionSystem _groundPollutionSystem;
         public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
-        public static WaterPipePollutionSystem _waterPipePollutionSystem;
         public static AirPollutionSystem _airPollutionSystem;
         public static WaterSystem _waterSystem;
        
-        internal ModSettings ActiveSettings { get; set; }
         internal static World ActiveWorld { get; private set; }
         public World World { get; private set; }
-
-        internal ModSettings activeSettings { get; set; }
-        
-
-        public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
-        private Mod instance;
-
-        public static void Log(string text) => log.Info(text);
 
         public void OnLoad(UpdateSystem updateSystem)
         {
             instance = this;
             log.Info(nameof(OnLoad));
+
+            if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
+            log.Info($"Current mod asset at {asset.path}");
+            m_Setting = new Setting(this);
+            m_Setting.RegisterInOptionsUI();
+            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
+            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, new Setting(this));
 
             ActiveWorld = updateSystem.World;
 
@@ -54,33 +55,20 @@ namespace NoPollution
             _buildingPollutionAddSystem = updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>();
             _groundPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundPollutionSystem>();
             _groundWaterPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>();
-            _waterPipePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<WaterPipePollutionSystem>();
             _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
             _waterSystem = updateSystem.World.GetOrCreateSystemManaged<WaterSystem>();
-            
-
 
             NoisePollutionResetSystem.World = updateSystem.World;
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
-            
-            
-           
 
-            ModSettings activeSettings = new(this);
-            activeSettings.RegisterInOptionsUI();
+            updateSystem.UpdateBefore<GroundPollutionQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateBefore<AirPollutionQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateBefore<NoisePollutionQuery>(SystemUpdatePhase.GameSimulation);
 
-            Localization.LoadTranslations(activeSettings, log);
 
-            AssetDatabase.global.LoadSettings("NoPollution", activeSettings, new ModSettings(this));
-
-            log.Info(nameof(OnLoad));
-
-            if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-                log.Info($"Current mod asset at {asset.path}");
         }
-
-        
+           
 
 
         public class NoisePollutionResetSystem
@@ -143,11 +131,40 @@ namespace NoPollution
                 }
             }
         }
+        public class NoisePollutionModifier
+        {
+            public static World ActiveWorld { get; set; }
+            
+            public static void NoiseMultiplierr()
+            {
+                NoisePollutionSystem orCreateSystemManaged = ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>();
 
 
+                JobHandle dependencies;
+                CellMapData<NoisePollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
+                dependencies.Complete();
+
+                for (int i = 0; i < data.m_TextureSize.x * data.m_TextureSize.y; i++)
+                {
+                    data.m_Buffer[i] = default(NoisePollution);
+                }
+
+            }
+        }
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
+            if (m_Setting != null)
+            {
+                m_Setting.UnregisterInOptionsUI();
+                m_Setting = null;
+            }
+
+
+
         }
+
     }
+
+
 }
