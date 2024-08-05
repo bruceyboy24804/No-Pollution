@@ -1,3 +1,43 @@
 {
+  {
+    "Options.SECTION[NoPollution.NoPollution.Mod]": "无污染|(No Pollution)",
+    "Options.TAB[NoPollution.NoPollution.Mod.MainTab]": "主要",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Noise Pollution]": "噪音污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.NoisePollutionDataSlider]": "噪音污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.NoisePollutionDataSlider]": "控制建筑物产生的噪音污染的百分比。例如，如果建筑物的基础噪音污染为100，则将滑块设置为50%将使污染量减半，因此不再是100而是50",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.NoisePollutionResetButton]": "噪音污染重置",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.NoisePollutionResetButton]": "按下此按钮将重置地图上显示的噪音污染，因此污染会随着时间的推移而积累。例如，假设噪音污染量为1000，按下此按钮将把噪音污染重置为0。",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Net Pollution]": "网络污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.NetPollutionToggle]": "网络污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.NetPollutionToggle]": "启用/禁用网络污染",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Building Pollution]": "建筑污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.BuildingPollutionToggle]": "建筑污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.BuildingPollutionToggle]": "启用/禁用建筑污染",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Ground Pollution]": "地面污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.GroundPollutionDataSlider]": "地面污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.GroundPollutionDataSlider]": "控制建筑物产生的土壤污染的百分比。例如，如果建筑物的基础土壤污染为100，则将滑块设置为50%将使污染量减半，因此不再是100而是50。",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.GroundPollutionResetButton]": "地面污染重置",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.GroundPollutionResetButton]": "按下此按钮将重置地图上显示的土壤污染，因此污染会随着时间的推移而积累。例如，假设土壤污染量为1000，按下此按钮将把土壤污染重置为0。",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Groundwater Pollution]": "地下水污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.GroundWaterPollutionToggle]": "地下水污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.GroundWaterPollutionToggle]": "启用/禁用地下水污染",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Air Pollution]": "空气污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.AirPollutionDataSlider]": "空气污染",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.AirPollutionDataSlider]": "控制建筑物产生的大气污染的百分比。例如，如果建筑物的基础大气污染为100，则将滑块设置为50%将使污染量减半，因此不再是100而是50。",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.AirPollutionResetButton]": "空气污染重置",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.AirPollutionResetButton]": "按下此按钮将重置地图上显示的大气污染，因此污染会随着时间的推移而积累。例如，假设大气污染量为1000，按下此按钮将把大气污染重置为0。",
+
+    "Options.GROUP[NoPollution.NoPollution.Mod.Water Pollution]": "水污染",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayInstantToggle]": "即时衰减率",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayInstantToggle]": "将水污染衰减率设置为1000",
+    "Options.OPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayRateSlider]": "水污染衰减率",
+    "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayRateSlider]": "设置水污染衰减率"
+  }
 
 }

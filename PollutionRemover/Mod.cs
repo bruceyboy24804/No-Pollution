@@ -7,10 +7,12 @@ using Game.Simulation;
 using Unity.Entities;
 using Colossal.IO.AssetDatabase;
 using Unity.Jobs;
-using Game.Debug;
-using NoPollution.Querys.GroundPollution;
+
 using static NoPollution.Setting;
-using NoPollution.Querys.AirPollution;
+using NoPollution.PollutionPrefabs;
+
+
+
 
 
 
@@ -18,12 +20,15 @@ namespace NoPollution
 {
     public class Mod : IMod
     {
+        public static Mod Instance { get; private set; }
+        internal ModSetting ActiveSettings { get; private set; }
+
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         private Mod instance;
         public static Setting m_Setting;
 
-        public static Mod Instance { get; private set; }
-        public static DebugSystem _debugSystem;
+        
+        
         public static PrefabSystem _prefabSystem;
         public static NoisePollutionSystem _noisePollutionSystem;
         public static NetPollutionSystem _netPollutionSystem;
@@ -32,7 +37,8 @@ namespace NoPollution
         public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
         public static AirPollutionSystem _airPollutionSystem;
         public static WaterSystem _waterSystem;
-       
+
+
         internal static World ActiveWorld { get; private set; }
         public World World { get; private set; }
 
@@ -50,6 +56,8 @@ namespace NoPollution
 
             ActiveWorld = updateSystem.World;
 
+
+
             _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
             _netPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>();
             _buildingPollutionAddSystem = updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>();
@@ -62,16 +70,26 @@ namespace NoPollution
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
 
-            updateSystem.UpdateBefore<GroundPollutionQuery>(SystemUpdatePhase.GameSimulation);
-            updateSystem.UpdateBefore<AirPollutionQuery>(SystemUpdatePhase.GameSimulation);
-            updateSystem.UpdateBefore<NoisePollutionQuery>(SystemUpdatePhase.GameSimulation);
-
-
-        }
+            updateSystem.UpdateBefore<PollutionPrefabQuery>(SystemUpdatePhase.GameSimulation);
            
 
+           
 
-        public class NoisePollutionResetSystem
+        }
+        
+    
+        public struct PollutionPrefabWrapper : IComponentData
+        {
+            public Entity pollutionPrefabEntity;
+        }
+    
+
+
+
+
+
+
+    public class NoisePollutionResetSystem
         {
             public static World World { get; set; }
 
@@ -131,26 +149,9 @@ namespace NoPollution
                 }
             }
         }
-        public class NoisePollutionModifier
-        {
-            public static World ActiveWorld { get; set; }
-            
-            public static void NoiseMultiplierr()
-            {
-                NoisePollutionSystem orCreateSystemManaged = ActiveWorld.GetOrCreateSystemManaged<NoisePollutionSystem>();
 
 
-                JobHandle dependencies;
-                CellMapData<NoisePollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
-                dependencies.Complete();
 
-                for (int i = 0; i < data.m_TextureSize.x * data.m_TextureSize.y; i++)
-                {
-                    data.m_Buffer[i] = default(NoisePollution);
-                }
-
-            }
-        }
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
@@ -158,6 +159,7 @@ namespace NoPollution
             {
                 m_Setting.UnregisterInOptionsUI();
                 m_Setting = null;
+               
             }
 
 
