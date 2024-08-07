@@ -5,65 +5,57 @@ using UnityEngine;
 
 namespace Game.Prefabs
 {
-    public class VanillaData : PrefabBase
+    public class VanillaParameterData
     {
+    
+
         // Class properties as before...
-        public float m_GroundMultiplier = 25f;
+        public static float m_GroundMultiplier = 20f;
 
-        public float m_AirMultiplier = 25f;
+        public static float m_AirMultiplier = 25f;
 
-        public float m_NoiseMultiplier = 100f;
+        public static float m_NoiseMultiplier = 250f;
 
-        public float m_NetAirMultiplier = 25f;
+        public static float m_NetAirMultiplier = 1.75f;
 
-        public float m_NetNoiseMultiplier = 100f;
+        public static float m_NetNoiseMultiplier = 5f;
 
-        public float m_GroundRadius = 150f;
+        public static float m_GroundRadius = 500f;
 
-        public float m_AirRadius = 75f;
+        public static float m_AirRadius = 100f;
 
-        public float m_NoiseRadius = 200f;
+        public static float m_NoiseRadius = 400f;
 
-        public float m_NetNoiseRadius = 50f;
+        public static float m_NetNoiseRadius = 8f;
 
-        public float m_WindAdvectionSpeed = 8f;
+        public static float m_WindAdvectionSpeed = 20f;
 
-        public short m_AirFade = 5;
+        public static short m_AirFade = 8000;
 
-        public short m_GroundFade = 10;
+        public static short m_GroundFade = 4000;
 
-        public float m_PlantAirMultiplier = 0.001f;
+        public static float m_PlantAirMultiplier = 0.001f;
 
-        public float m_PlantGroundMultiplier = 0.001f;
+        public static float m_PlantGroundMultiplier = 0.001f;
 
-        public float m_PlantFade = 2f;
+        public static float m_PlantFade = 2f;
 
-        public float m_FertilityGroundMultiplier = 1f;
+        public static float m_FertilityGroundMultiplier = 1f;
 
-        public float m_DistanceExponent = 2f;
+        public static float m_DistanceExponent = 1.5f;
 
+        public static float m_AirPollutionNotificationLimit = -7f;
 
-        public override void GetPrefabComponents(HashSet<ComponentType> components)
-        {
-            base.GetPrefabComponents(components);
-            components.Add(ComponentType.ReadWrite<PollutionParameterData>());
-            components.Add(ComponentType.ReadWrite<Mod.PollutionPrefabWrapper>()); // Add this line
-        }
+        public static float m_NoisePollutionNotificationLimit = -7f;
 
-        public override void LateInitialize(EntityManager entityManager, Entity entity)
-        {
-            base.LateInitialize(entityManager, entity);
+        public static float m_GroundPollutionNotificationLimit = -7f;
 
-            PrefabSystem orCreateSystemManaged = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+        public static float m_AbandonedNoisePollutionMultiplier = 5f;
 
-            // Set the PollutionPrefabWrapper data
-            Mod.PollutionPrefabWrapper wrapper = new Mod.PollutionPrefabWrapper
-            {
-                pollutionPrefabEntity = entity
-            };
-            entityManager.SetComponentData(entity, wrapper);
+        public static float m_HomelessNoisePollution = 50f;
 
-            // Existing component data setup...
-        }
+        public static float m_GroundPollutionLandValueDivisor = 500f;
+
+       
     }
 }

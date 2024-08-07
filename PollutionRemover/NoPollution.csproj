@@ -14,12 +14,7 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 	<ItemGroup>
-	  <Compile Remove="Querys\**" />
-	  <EmbeddedResource Remove="Querys\**" />
-	  <None Remove="Querys\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Remove="PollutionPrefabs\ParameterData.cs" />
+	  <Compile Remove="Querys\ParameterData.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

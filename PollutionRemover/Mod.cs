@@ -1,34 +1,22 @@
-﻿using Colossal.Logging;
-using Game;
+﻿using Colossal.IO.AssetDatabase;
+using Colossal.Logging;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
-using Unity.Entities;
-using Colossal.IO.AssetDatabase;
-using Unity.Jobs;
-
+using Game;
+using NoPollution.ResetSystems;
 using static NoPollution.Setting;
-using NoPollution.PollutionPrefabs;
-
-
-
-
-
+using Unity.Entities;
 
 namespace NoPollution
 {
-    public class Mod : IMod
+    public sealed class Mod : IMod
     {
+        // Static fields
         public static Mod Instance { get; private set; }
-        internal ModSetting ActiveSettings { get; private set; }
-
         public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
-        private Mod instance;
         public static Setting m_Setting;
-
-        
-        
         public static PrefabSystem _prefabSystem;
         public static NoisePollutionSystem _noisePollutionSystem;
         public static NetPollutionSystem _netPollutionSystem;
@@ -38,25 +26,30 @@ namespace NoPollution
         public static AirPollutionSystem _airPollutionSystem;
         public static WaterSystem _waterSystem;
 
+        // Instance fields
+        private Mod instance;
 
+        // Properties
+        internal Setting ActiveSettings { get; private set; }
         internal static World ActiveWorld { get; private set; }
         public World World { get; private set; }
 
+        // Methods
+        /// <summary>
+        /// Called by the game when the mod is loaded.
+        /// </summary>
+        /// <param name="updateSystem">Game update system.</param>
         public void OnLoad(UpdateSystem updateSystem)
         {
             instance = this;
             log.Info(nameof(OnLoad));
 
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-            log.Info($"Current mod asset at {asset.path}");
-            m_Setting = new Setting(this);
-            m_Setting.RegisterInOptionsUI();
-            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
-            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, new Setting(this));
+            {
+                log.Info($"Current mod asset at {asset.path}");
+            }
 
             ActiveWorld = updateSystem.World;
-
-
 
             _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
             _netPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>();
@@ -70,88 +63,22 @@ namespace NoPollution
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
 
-            updateSystem.UpdateBefore<PollutionPrefabQuery>(SystemUpdatePhase.GameSimulation);
-           
+            // Ensure ActiveSettings and m_Setting are properly initialized
+            ActiveSettings = new Setting(this);
+            m_Setting = new Setting(this);
 
-           
+            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, ActiveSettings);
 
-        }
-        
-    
-        public struct PollutionPrefabWrapper : IComponentData
-        {
-            public Entity pollutionPrefabEntity;
-        }
-    
+            ActiveSettings.RegisterInOptionsUI();
 
+            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
 
-
-
-
-
-    public class NoisePollutionResetSystem
-        {
-            public static World World { get; set; }
-
-            public static void ResetPollution()
-            {
-                NoisePollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<NoisePollutionSystem>();
-
-                JobHandle dependencies;
-                CellMapData<NoisePollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies);
-
-                dependencies.Complete();
-
-                for (int i = 0; i < data.m_TextureSize.x * data.m_TextureSize.y; i++)
-                {
-                    data.m_Buffer[i] = default(NoisePollution);
-                }
-            }
+            updateSystem.UpdateBefore<PollutionModiferDataQuery>(SystemUpdatePhase.GameSimulation);
         }
 
-        public class GroundPollutionResetSystem
-        {
-            public static World World { get; set; }
-
-            public static void ResetPollution()
-            {
-                GroundPollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<GroundPollutionSystem>();
-                log.Info("GroundPollutionSystem created");
-
-                JobHandle dependencies2;
-                CellMapData<GroundPollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies2);
-
-                dependencies2.Complete();
-
-                for (int j = 0; j < data.m_TextureSize.x * data.m_TextureSize.y; j++)
-                {
-                    data.m_Buffer[j] = default(GroundPollution);
-                }
-            }
-        }
-
-        public class AirPollutionResetSystem
-        {
-            public static World World { get; set; }
-
-            public static void ResetPollution()
-            {
-                AirPollutionSystem orCreateSystemManaged = World.GetOrCreateSystemManaged<AirPollutionSystem>();
-
-                JobHandle dependencies3;
-                CellMapData<AirPollution> data = orCreateSystemManaged.GetData(readOnly: false, out dependencies3);
-
-                dependencies3.Complete();
-
-                for (int k = 0; k < data.m_TextureSize.x * data.m_TextureSize.y; k++)
-                {
-                    data.m_Buffer[k] = default(AirPollution);
-                }
-            }
-        }
-
-
-
+        /// <summary>
+        /// Called by the game when the mod is disposed of.
+        /// </summary>
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
@@ -159,14 +86,7 @@ namespace NoPollution
             {
                 m_Setting.UnregisterInOptionsUI();
                 m_Setting = null;
-               
             }
-
-
-
         }
-
     }
-
-
 }
