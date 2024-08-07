@@ -9,9 +9,9 @@ using Unity.Jobs;
 
 namespace NoPollution.ResetSystems
 {
-    public partial class AirPollutionResetSystem
+    public class AirPollutionResetSystem
     {
-        public static World World { get; internal set; }
+        public static World World { get; set; }
 
         
 

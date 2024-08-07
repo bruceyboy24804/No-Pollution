@@ -9,7 +9,7 @@ using Unity.Jobs;
 
 namespace NoPollution.ResetSystems
 {
-    public partial class NoisePollutionResetSystem 
+    public class NoisePollutionResetSystem 
     {
       public static World World { get; set; }
 

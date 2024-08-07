@@ -22,7 +22,7 @@ This mod will:
 - Let you control the water pollution decay rate with a slider
 
 ## Whats New:
-
+- added many new sliders in advanced section
 
 ## Roadmap
 - Pollution Master slider
@@ -68,13 +68,13 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.3.4" />
+	<ModVersion Value="2.3.5" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="75426" DisplayName="I18n EveryWhere" Version="1.2.2" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>- Reverted some changes and added a couple of new things</ChangeLog>
+	<ChangeLog>- Revised code and added more sliders in advanced section</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />
 	<ExternalLink Type="discord" Url="https://discord.gg/U6t4pEYh" />

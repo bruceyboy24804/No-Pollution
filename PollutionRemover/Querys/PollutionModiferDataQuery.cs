@@ -49,7 +49,7 @@ namespace NoPollution
                     if (EntityManager.TryGetComponent(entity, out PollutionParameterData data))
                     {
                         data.m_GroundMultiplier = (int)setting.GroundMultiplier;
-                        data.m_AirMultiplier = (int)setting.GroundMultiplier;
+                        data.m_AirMultiplier = (int)setting.AirMultiplier;
                         data.m_NoiseMultiplier = (int)(setting.NoiseMultiplier / 100d * VanillaParameterData.m_NoiseMultiplier);
                         data.m_NetAirMultiplier = (int)setting.NetAirMultiplier;
                         data.m_NetNoiseMultiplier = (int)setting.NetNoiseMultiplier;

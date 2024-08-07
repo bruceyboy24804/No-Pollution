@@ -8,6 +8,10 @@ using Game;
 using NoPollution.ResetSystems;
 using static NoPollution.Setting;
 using Unity.Entities;
+using System;
+using Game.Settings;
+
+
 
 namespace NoPollution
 {
@@ -30,7 +34,7 @@ namespace NoPollution
         private Mod instance;
 
         // Properties
-        internal Setting ActiveSettings { get; private set; }
+        internal Setting activeSettings { get; private set; }
         internal static World ActiveWorld { get; private set; }
         public World World { get; private set; }
 
@@ -50,7 +54,7 @@ namespace NoPollution
             }
 
             ActiveWorld = updateSystem.World;
-
+            
             _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
             _netPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>();
             _buildingPollutionAddSystem = updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>();
@@ -64,17 +68,20 @@ namespace NoPollution
             AirPollutionResetSystem.World = updateSystem.World;
 
             // Ensure ActiveSettings and m_Setting are properly initialized
-            ActiveSettings = new Setting(this);
             m_Setting = new Setting(this);
-
-            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, ActiveSettings);
-
-            ActiveSettings.RegisterInOptionsUI();
+            m_Setting.RegisterInOptionsUI();
+            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, new Setting(this));
+            
 
             GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
 
-            updateSystem.UpdateBefore<PollutionModiferDataQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAt<PollutionModiferDataQuery>(SystemUpdatePhase.PrefabUpdate);
+            updateSystem.UpdateAt<PollutionModiferDataQuery>(SystemUpdatePhase.PrefabReferences);
+
+            
         }
+
+
 
         /// <summary>
         /// Called by the game when the mod is disposed of.
