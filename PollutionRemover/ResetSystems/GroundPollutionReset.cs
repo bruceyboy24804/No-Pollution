@@ -24,12 +24,12 @@ namespace NoPollution.ResetSystems
 
             dependencies3.Complete();
 
-            for (int j = 0; j < data.m_TextureSize.x * data.m_TextureSize.y; j++)
+            for (int i = 0; i < data.m_TextureSize.x * data.m_TextureSize.y; i++)
             {
-                data.m_Buffer[j] = default(GroundPollution);
+                data.m_Buffer[i] = default(GroundPollution);
             }
         }
 
-       
+
     }
 }

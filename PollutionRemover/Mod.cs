@@ -1,99 +1,128 @@
-﻿using Colossal.IO.AssetDatabase;
-using Colossal.Logging;
-using Game.Modding;
-using Game.Prefabs;
-using Game.SceneFlow;
-using Game.Simulation;
-using Game;
-using NoPollution.ResetSystems;
-using static NoPollution.Setting;
-using Unity.Entities;
-using System;
-using Game.Settings;
-
-
-
-namespace NoPollution
+﻿namespace NoPollution
 {
+    using System;
+    using Colossal.IO.AssetDatabase;
+    using Colossal.Logging;
+    using Game;
+    using Game.Modding;
+    using Game.SceneFlow;
+    using Game.Simulation;
+    using Unity.Entities;
+    using NoPollution.ResetSystems;
+    using NoPollution.Querys;
+    using Game.Settings;
+    using Game.Debug;
+    using Game.Prefabs;
+    using static NoPollution.Setting;
+    using NoPollution.Systems;
+
+    /// <summary>
+    /// The base mod class for NoPollution mod.
+    /// </summary>
     public sealed class Mod : IMod
     {
-        // Static fields
+        /// <summary>
+        /// Gets the active instance of the mod.
+        /// </summary>
         public static Mod Instance { get; private set; }
-        public static ILog log = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
+
+        /// <summary>
+        /// Gets or sets the active settings for the mod.
+        /// </summary>
+        internal Setting ActiveSettings { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the active world for the mod.
+        /// </summary>
+        internal static World ActiveWorld { get; private set; }
+
+        /// <summary>
+        /// Logger for the mod.
+        /// </summary>
+        public static ILog Log { get; private set; } = LogManager.GetLogger($"{nameof(NoPollution)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
+
+        // Systems managed by the mod
         public static Setting m_Setting;
         public static PrefabSystem _prefabSystem;
-        public static NoisePollutionSystem _noisePollutionSystem;
-        public static NetPollutionSystem _netPollutionSystem;
-        public static BuildingPollutionAddSystem _buildingPollutionAddSystem;
-        public static GroundPollutionSystem _groundPollutionSystem;
-        public static GroundWaterPollutionSystem _groundWaterPollutionSystem;
-        public static AirPollutionSystem _airPollutionSystem;
-        public static WaterSystem _waterSystem;
+        public static DebugSystem _debugSystem;
+      
 
-        // Instance fields
-        private Mod instance;
-
-        // Properties
-        internal Setting activeSettings { get; private set; }
-        internal static World ActiveWorld { get; private set; }
-        public World World { get; private set; }
-
-        // Methods
         /// <summary>
         /// Called by the game when the mod is loaded.
         /// </summary>
         /// <param name="updateSystem">Game update system.</param>
         public void OnLoad(UpdateSystem updateSystem)
         {
-            instance = this;
-            log.Info(nameof(OnLoad));
-
-            if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-            {
-                log.Info($"Current mod asset at {asset.path}");
-            }
-
+            // Set the active instance and world.
+            Instance = this;
             ActiveWorld = updateSystem.World;
-            
-            _noisePollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NoisePollutionSystem>();
-            _netPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<NetPollutionSystem>();
-            _buildingPollutionAddSystem = updateSystem.World.GetOrCreateSystemManaged<BuildingPollutionAddSystem>();
-            _groundPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundPollutionSystem>();
-            _groundWaterPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<GroundWaterPollutionSystem>();
-            _airPollutionSystem = updateSystem.World.GetOrCreateSystemManaged<AirPollutionSystem>();
-            _waterSystem = updateSystem.World.GetOrCreateSystemManaged<WaterSystem>();
 
+            Log.Info(nameof(OnLoad));
+
+            // Initialize systems
+            InitializeSystems(updateSystem);
+
+            // Load and register settings
+            m_Setting = new Setting(this);
+            if (m_Setting == null)
+            {
+                Log.Error("Failed to initialize settings.");
+                return;
+            }
+            m_Setting.RegisterInOptionsUI();
+            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, new Setting(this));
+
+            // Load localization
+            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
+
+            // Assign world to reset systems
             NoisePollutionResetSystem.World = updateSystem.World;
             GroundPollutionResetSystem.World = updateSystem.World;
             AirPollutionResetSystem.World = updateSystem.World;
-
-            // Ensure ActiveSettings and m_Setting are properly initialized
-            m_Setting = new Setting(this);
-            m_Setting.RegisterInOptionsUI();
-            AssetDatabase.global.LoadSettings(nameof(NoPollution), m_Setting, new Setting(this));
             
+            // Register update phases
+          
+            updateSystem.UpdateAt<PollutionParameterDataQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAt<PollutionDataQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAt<NetPollutionDataQuery>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAt<GroundWaterPollutionReductionSystem>(SystemUpdatePhase.GameSimulation);
 
-            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
 
-            updateSystem.UpdateAt<PollutionModiferDataQuery>(SystemUpdatePhase.PrefabUpdate);
-            updateSystem.UpdateAt<PollutionModiferDataQuery>(SystemUpdatePhase.PrefabReferences);
 
-            
+            // Log mod load completion
+            Log.Info($"Loaded {nameof(NoPollution)} mod successfully.");
         }
 
 
+        /// <summary>
+        /// Initializes the necessary systems for the mod.
+        /// </summary>
+        /// <param name="updateSystem">Game update system.</param>
+        private void InitializeSystems(UpdateSystem updateSystem)
+        {
+            _debugSystem = updateSystem.World.GetOrCreateSystemManaged<DebugSystem>();
+           
+          
+        }
 
         /// <summary>
         /// Called by the game when the mod is disposed of.
         /// </summary>
         public void OnDispose()
         {
-            log.Info(nameof(OnDispose));
+            Log.Info(nameof(OnDispose));
+
+            // Unregister and clear settings
             if (m_Setting != null)
             {
                 m_Setting.UnregisterInOptionsUI();
                 m_Setting = null;
             }
+
+            // Clear the instance
+            Instance = null;
+
+            Log.Info($"{nameof(NoPollution)} mod disposed successfully.");
         }
     }
 }

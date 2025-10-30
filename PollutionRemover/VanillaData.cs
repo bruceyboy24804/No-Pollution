@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Game.Prefabs
+namespace NoPollution
 {
     public class VanillaParameterData
     {
-    
+
 
         // Class properties as before...
         public static float m_GroundMultiplier = 20f;
@@ -56,6 +56,6 @@ namespace Game.Prefabs
 
         public static float m_GroundPollutionLandValueDivisor = 500f;
 
-       
+
     }
 }

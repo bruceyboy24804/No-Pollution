@@ -1,5 +1,5 @@
 {
-  {
+  
     "Options.SECTION[NoPollution.NoPollution.Mod]": "无污染|(No Pollution)",
     "Options.TAB[NoPollution.NoPollution.Mod.MainTab]": "主要",
 
@@ -38,6 +38,6 @@
     "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayInstantToggle]": "将水污染衰减率设置为1000",
     "Options.OPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayRateSlider]": "水污染衰减率",
     "Options.OPTION_DESCRIPTION[NoPollution.NoPollution.Mod.Setting.WaterPollutionDecayRateSlider]": "设置水污染衰减率"
-  }
+  
 
 }
