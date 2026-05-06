@@ -22,7 +22,10 @@ This mod will:
 - Let you control the water pollution decay rate with a slider
 
 ## Whats New:
-- added many new sliders in advanced section
+- Fully control ground, air, and noise pollution.
+- removing of polluted ground water
+- take control of net pollution
+
 
 ## Roadmap
 - Pollution Master slider
@@ -53,28 +56,30 @@ Lots of people have helped me try to make No Pollution happen. Especially the pe
 - augustpower71
 	</LongDescription>
 	<!--Thumbnail-->
-	<Thumbnail Value="Properties/NoPollutionLogo.png" />
+	<Thumbnail Value="Properties/NoPollutionThumb.jpg" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/NoPollutionLogo.png" />
-	<Screenshot Value="Properties/Screenshots/AirPollution.png" />
-	<Screenshot Value="Properties/Screenshots/decayrate.png" />
-	<Screenshot Value="Properties/Screenshots/GroundPollution.png" />
-	<Screenshot Value="Properties/Screenshots/NoisePollution.png" />
-	<Screenshot Value="Properties/Screenshots/NoPollutionLogo.jpg" />
-	<Screenshot Value="Properties/Screenshots/ResetPollutionA.png" />
-	<Screenshot Value="Properties/Screenshots/ResetPollutionB.png" />
+	<Screenshot Value="Properties/Screenshots/2.png" />
+	<Screenshot Value="Properties/Screenshots/3.png" />
+	<Screenshot Value="Properties/Screenshots/4.png" />
+	<Screenshot Value="Properties/Screenshots/5.png" />
+	<Screenshot Value="Properties/Screenshots/6.png" />
+	<Screenshot Value="Properties/Screenshots/7.png" />
+	<Screenshot Value="Properties/Screenshots/10.png" />
+	<Screenshot Value="Properties/Screenshots/11.png" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/no-pollution.1665021/"/>
 	<!--Version of the mod-->
-	<ModVersion Value="2.3.5" />
+	<ModVersion Value="2.5.7" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.1.*" />
+	<GameVersion Value="1.5.7*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="75426" DisplayName="I18n EveryWhere" Version="1.2.2" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>- Revised code and added more sliders in advanced section</ChangeLog>
+	<ChangeLog>## Version 2.5.7
+- Compatability with game version 1.5.7f1
+    </ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/bruceyboy24804/No-Pollution" />
 	<ExternalLink Type="discord" Url="https://discord.gg/U6t4pEYh" />

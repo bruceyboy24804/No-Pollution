@@ -1,8 +1,9 @@
-﻿using Game;
+using Game;
 using Game.Prefabs;
 using Game.Settings;
 using Game.Simulation;
 using System.Collections.Generic;
+using Colossal.Entities;
 using Unity.Collections;
 using Unity.Entities;
 using NoPollution;
@@ -12,14 +13,16 @@ namespace NoPollution.Querys
     public partial class PollutionDataQuery : GameSystemBase
     {
         private EntityQuery m_Query;
-
+        private PrefabSystem _PrefabSystem;
         // Dictionary to store base pollution values per entity
         private Dictionary<Entity, PollutionData> basePollutionValues = new Dictionary<Entity, PollutionData>();
+        private static readonly PrefabID _PrefabID1 = new PrefabID("ZonePrefab", "Industrial Manufacturing");
 
         protected override void OnCreate()
         {
             base.OnCreate();
             m_Query = SystemAPI.QueryBuilder().WithAll<PollutionData>().Build();
+            _PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             RequireForUpdate(m_Query);
         }
 
@@ -59,6 +62,27 @@ namespace NoPollution.Querys
             // Dispose of NativeArrays when done
             entities.Dispose();
             pollutionDataArray.Dispose();
+        }
+        public void LegacyButton()
+        {
+            if (_PrefabSystem.TryGetPrefab(_PrefabID1, out PrefabBase prefab) 
+                && _PrefabSystem.TryGetEntity(prefab, out Entity prefabEntity)
+                && EntityManager.TryGetComponent(prefabEntity, out Game.Prefabs.ZonePollutionData data))
+            {
+                data.m_NoisePollution = 15;
+                EntityManager.SetComponentData(prefabEntity, data);
+            }
+        }
+        public void CurrentButton()
+        {
+            if (_PrefabSystem.TryGetPrefab(_PrefabID1, out PrefabBase prefab) 
+                && prefab.TryGet(out Game.Prefabs.ZonePollution zonePollution)
+                && _PrefabSystem.TryGetEntity(prefab, out Entity prefabEntity)
+                && EntityManager.TryGetComponent(prefabEntity, out Game.Prefabs.ZonePollutionData data))
+            {
+                data.m_NoisePollution = zonePollution.m_NoisePollution;
+                EntityManager.SetComponentData(prefabEntity, data);
+            }
         }
     }
 }

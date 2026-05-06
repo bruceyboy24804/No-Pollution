@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Colossal;
 using Colossal.IO.AssetDatabase;
 using Game;
@@ -12,6 +12,7 @@ using Game.UI;
 using NoPollution.ResetSystems;
 //using NoPollution.Systems;
 using System.Collections.Generic;
+using Colossal.Json;
 using Unity.Entities;
 using static Colossal.IO.AssetDatabase.AssetDatabase;
 using Game.UI.Debug;
@@ -26,8 +27,8 @@ namespace NoPollution
 {
     [FileLocation(nameof(NoPollution))]
     [SettingsUITabOrder(MainTab, ParametersTab)]
-    [SettingsUIGroupOrder(NoisePollutionGroup, NetPollutionGroup, GroundPollutionGroup, GroundwaterPollutionGroup, AirPollutionGroup, WaterPollutionGroup, MultipliersGroup, RadiusGroup, FadesGroup, NotificationLimitsGroup, OtherParametersGroup)]
-    [SettingsUIShowGroupName(NoisePollutionGroup, NetPollutionGroup, GroundPollutionGroup, GroundwaterPollutionGroup, AirPollutionGroup, WaterPollutionGroup, MultipliersGroup, RadiusGroup, FadesGroup, NotificationLimitsGroup, OtherParametersGroup)]
+    [SettingsUIGroupOrder(LegacyGroup, NoisePollutionGroup, NetPollutionGroup, GroundPollutionGroup, GroundwaterPollutionGroup, AirPollutionGroup, WaterPollutionGroup, MultipliersGroup, RadiusGroup, FadesGroup, NotificationLimitsGroup, OtherParametersGroup)]
+    [SettingsUIShowGroupName(LegacyGroup, NoisePollutionGroup, NetPollutionGroup, GroundPollutionGroup, GroundwaterPollutionGroup, AirPollutionGroup, WaterPollutionGroup, MultipliersGroup, RadiusGroup, FadesGroup, NotificationLimitsGroup, OtherParametersGroup)]
     public class Setting : ModSetting
     {
 
@@ -37,6 +38,7 @@ namespace NoPollution
 
         // Constants
         public const string MainTab = "Main";
+        public const string LegacyGroup = "Legacy";
         public const string NoisePollutionGroup = "Noise Pollution";
         public const string NetPollutionGroup = "Net Pollution";
         public const string GroundPollutionGroup = "Ground Pollution";
@@ -69,14 +71,64 @@ namespace NoPollution
         public bool _groundWaterPollutionToggle;
       
         // Constructor
-        public Setting(IMod mod) : base(mod) { }
+        public Setting(IMod mod) : base(mod)
+        {
+            
+        }
+        private readonly Dictionary<string, object> _values = new();
+        private T GetValue<T>(string propertyName, Func<T> defaultProvider)
+        {
+            if (_values.TryGetValue(propertyName, out var value))
+            {
+                try
+                {
+                    return (T)Convert.ChangeType(value, typeof(T));
+                }
+                catch (InvalidCastException)
+                {
+                    Mod.Log.Info(
+                        $"Warning: Unable to cast setting '{propertyName}' to {typeof(T)}. Returning default."
+                    );
+                }
+            }
+            var defaultValue = defaultProvider();
+            _values[propertyName] = defaultValue;
+            return defaultValue;
+        }
 
-        
-
-        // Properties
-
+        private void SetValue<T>(string propertyName, T value, Action onChanged = null)
+        {
+            _values[propertyName] = value;
+            onChanged?.Invoke();
+        }
+        [Exclude]
+        public VanillaData VanillaDataFromStorage = VanillaDataStorage.VanillaData;
+        [SettingsUISection(MainTab, LegacyGroup)]
+        [SettingsUIButtonGroup("Buttons")]
+        [SettingsUIButton]
+       public bool LegacyButton
+       {
+           set
+           {
+               PollutionDataQuery pollutionDataQuery = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<PollutionDataQuery>();
+               if (pollutionDataQuery == null) return;
+               pollutionDataQuery.LegacyButton();
+           } 
+       }
        
-
+       [SettingsUISection(MainTab, LegacyGroup)]
+       [SettingsUIButtonGroup("Buttons")]
+       [SettingsUIButton]
+       public bool CurrentButton
+       {
+           set
+           {
+               PollutionDataQuery pollutionDataQuery = World.DefaultGameObjectInjectionWorld?.GetOrCreateSystemManaged<PollutionDataQuery>();
+               if (pollutionDataQuery == null) return;
+               pollutionDataQuery.CurrentButton();
+           } 
+       }
+        
         /// <summary>
         /// Noise pollution group
         /// </summary>
@@ -292,131 +344,241 @@ namespace NoPollution
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
-        [SettingsUISlider(min = 0, max = 20, step = 1)]
-        public float GroundMultiplier { get; set; } = 20;
+        [SettingsUISlider(min = 0, max = 20, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float GroundMultiplier
+        {
+            get => GetValue(nameof(GroundMultiplier), () => VanillaDataFromStorage.m_GroundMultiplier);
+            set => SetValue(nameof(GroundMultiplier), value, ApplyAndSave);
+            
+        }
+        
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, MultipliersGroup)]
+        [SettingsUISlider(min = 0, max = 40, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float AirMultiplier
+        {
+            get => GetValue(nameof(AirMultiplier), () => VanillaDataFromStorage.m_AirMultiplier);
+            set => SetValue(nameof(AirMultiplier), value, ApplyAndSave);
+        }
 
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
-        [SettingsUISlider(min = 0, max = 25, step = 1)]
-        public float AirMultiplier { get; set; } = 25;
+        [SettingsUISlider(min = 0, max = 250, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float NoiseMultiplier
+        {
+            get => GetValue(nameof(NoiseMultiplier), () => VanillaDataFromStorage.m_NoiseMultiplier);
+            set => SetValue(nameof(NoiseMultiplier), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1, unit = Unit.kPercentage)]
-        public float NoiseMultiplier { get; set; } = 100;
+        [SettingsUISlider(min = 0, max = 1f, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float NetAirMultiplier
+        {
+            get => GetValue(nameof(NetAirMultiplier), () => VanillaDataFromStorage.m_NetAirMultiplier);
+            set => SetValue(nameof(NetAirMultiplier), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
-        [SettingsUISlider(min = 0, max = 1.75f, step = 0.5f, unit = Unit.kFloatSingleFraction)]
-        public float NetAirMultiplier { get; set; } = 1.75f;
+        [SettingsUISlider(min = 0, max = 2, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float NetNoiseMultiplier
+        {
+            get => GetValue(nameof(NetNoiseMultiplier), () => VanillaDataFromStorage.m_NetNoiseMultiplier);
+            set => SetValue(nameof(NetNoiseMultiplier), value, ApplyAndSave);
+        }
 
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, MultipliersGroup)]
-        [SettingsUISlider(min = 0, max = 5, step = 0.5f, unit = Unit.kFloatTwoFractions)]
-        public float NetNoiseMultiplier { get; set; } = 5;
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
         [SettingsUISlider(min = 0, max = 0.001f, step = 0.001f, unit = Unit.kFloatThreeFractions)]
-        public float PlantAirMultiplier { get; set; } = 0.001f;
+        public float PlantAirMultiplier
+        {
+            get => GetValue(nameof(PlantAirMultiplier), () => VanillaDataFromStorage.m_PlantAirMultiplier);
+            set => SetValue(nameof(PlantAirMultiplier), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
         [SettingsUISlider(min = 0, max = 0.001f, step = 0.001f, unit = Unit.kFloatThreeFractions)]
-        public float PlantGroundMultiplier { get; set; } = 0.001f;
+        public float PlantGroundMultiplier
+        {
+            get => GetValue(nameof(PlantGroundMultiplier), () => VanillaDataFromStorage.m_PlantGroundMultiplier);
+            set => SetValue(nameof(PlantGroundMultiplier), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
         [SettingsUISlider(min = 0, max = 1, step = 0.1f, unit = Unit.kFloatSingleFraction)]
-        public float FertilityGroundMultiplier { get; set; } = 1;
+        public float FertilityGroundMultiplier
+        {
+            get => GetValue(nameof(FertilityGroundMultiplier), () => VanillaDataFromStorage.m_FertilityGroundMultiplier);
+            set => SetValue(nameof(FertilityGroundMultiplier), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, MultipliersGroup)]
         [SettingsUISlider(min = 0, max = 5, step = 0.1f, unit = Unit.kFloatSingleFraction)]
-        public float AbandonedNoisePollutionMultiplier { get; set; } = 5;
+        public float AbandonedNoisePollutionMultiplier
+        {
+            get => GetValue(nameof(AbandonedNoisePollutionMultiplier), () => VanillaDataFromStorage.m_AbandonedNoisePollutionMultiplier);
+            set => SetValue(nameof(AbandonedNoisePollutionMultiplier), value, ApplyAndSave);
+        }
 
         //RADIUS
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, RadiusGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1)]
-
-        public float AirRadius { get; set; } = 100;
-
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, RadiusGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1, unit = Unit.kPercentage)]
-        public float GroundRadius { get; set; } = 100;
-
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, RadiusGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1, unit = Unit.kPercentage)]
-
-        public float NoiseRadius { get; set; } = 100;
+        [SettingsUISlider(min = 0, max = 100, step = 1, unit = Unit.kInteger)]
+        public float AirRadius
+        {
+            get => GetValue(nameof(AirRadius), () => VanillaDataFromStorage.m_AirRadius);
+            set => SetValue(nameof(AirRadius), value, ApplyAndSave);
+        }
 
 
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, RadiusGroup)]
-        [SettingsUISlider(min = 0, max = 8, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kInteger)]
+        public float GroundRadius
+        {
+            get => GetValue(nameof(GroundRadius), () => VanillaDataFromStorage.m_GroundRadius);
+            set => SetValue(nameof(GroundRadius), value, ApplyAndSave);
+        }
 
-        public float NetNoiseRadius { get; set; } = 8;
+
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, RadiusGroup)]
+        [SettingsUISlider(min = 0, max = 600, step = 1, unit = Unit.kInteger)]
+        public float NoiseRadius
+        {
+            get => GetValue(nameof(NoiseRadius), () => VanillaDataFromStorage.m_NoiseRadius);
+            set => SetValue(nameof(NoiseRadius), value, ApplyAndSave);
+        }
+
+
+
+
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, RadiusGroup)]
+        [SettingsUISlider(min = 0, max = 3, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float NetNoiseRadius
+        {
+            get => GetValue(nameof(NetNoiseRadius), () => VanillaDataFromStorage.m_NetNoiseRadius);
+            set => SetValue(nameof(NetNoiseRadius), value, ApplyAndSave);
+        }
 
 
 
         //FADES
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, FadesGroup)]
-        [SettingsUISlider(min = 0, max = 200, step = 1, unit = Unit.kPercentage)]
-        public float AirFade { get; set; } = 100;
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, FadesGroup)]
-        [SettingsUISlider(min = 0, max = 200, step = 1, unit = Unit.kPercentage)]
-        public float GroundFade { get; set; } = 100;
+        [SettingsUISlider(min = 0, max = 10000, step = 100f, unit = Unit.kInteger)]
+        public int AirFade
+        {
+            get => GetValue(nameof(AirFade), () => VanillaDataFromStorage.m_AirFade);
+            set => SetValue(nameof(AirFade), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, FadesGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1)]
-        public float PlantFade { get; set; } = 2;
+        [SettingsUISlider(min = 0, max = 8000, step = 100f, unit = Unit.kInteger)]
+        public int GroundFade
+        {
+            get => GetValue(nameof(GroundFade), () => VanillaDataFromStorage.m_GroundFade);
+            set => SetValue(nameof(GroundFade), value, ApplyAndSave);
+        }
+
+
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, FadesGroup)]
+        [SettingsUISlider(min = 0, max = 100, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float PlantFade
+        {
+            get => GetValue(nameof(PlantFade), () => VanillaDataFromStorage.m_PlantFade);
+            set => SetValue(nameof(PlantFade), value, ApplyAndSave);
+        }
 
         //NOTIFICATION LIMITS
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, NotificationLimitsGroup)]
-        [SettingsUISlider(min = 0, max = -100f, step = 1)]
-        public float AirPollutionNotificationLimit { get; set; } = -7;
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, NotificationLimitsGroup)]
         [SettingsUISlider(min = 0, max = -100f, step = 1)]
-        public float NoisePollutionNotificationLimit { get; set; } = -7;
+        public float AirPollutionNotificationLimit
+        {
+            get => GetValue(nameof(AirPollutionNotificationLimit), () => VanillaDataFromStorage.m_AirPollutionNotificationLimit);
+            set => SetValue(nameof(AirPollutionNotificationLimit), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, NotificationLimitsGroup)]
         [SettingsUISlider(min = 0, max = -100f, step = 1)]
-        public float GroundPollutionNotificationLimit { get; set; } = -7;
+        public float NoisePollutionNotificationLimit
+        {
+            get => GetValue(nameof(NoisePollutionNotificationLimit), () => VanillaDataFromStorage.m_NoisePollutionNotificationLimit);
+            set => SetValue(nameof(NoisePollutionNotificationLimit), value, ApplyAndSave);
+        }
+
+
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, NotificationLimitsGroup)]
+        [SettingsUISlider(min = 0, max = -100f, step = 1)]
+        public float GroundPollutionNotificationLimit
+        {
+            get => GetValue(nameof(GroundPollutionNotificationLimit), () => VanillaDataFromStorage.m_GroundPollutionNotificationLimit);
+            set => SetValue(nameof(GroundPollutionNotificationLimit), value, ApplyAndSave);
+        }
 
         //OTHER PARAMETERS
-        [SettingsUIAdvanced]
-        [SettingsUISection(ParametersTab, OtherParametersGroup)]
-        [SettingsUISlider(min = 0, max = 10, step = 1)]
-        public float WindAdvectionSpeed { get; set; } = 20;
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, OtherParametersGroup)]
-        [SettingsUISlider(min = 0, max = 10, step = 0.5f, unit = Unit.kFloatSingleFraction)]
-        public float DistanceExponent { get; set; } = 1.5f;
+        [SettingsUISlider(min = 0, max = 30, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float WindAdvectionSpeed
+        {
+            get => GetValue(nameof(WindAdvectionSpeed), () => VanillaDataFromStorage.m_WindAdvectionSpeed);
+            set => SetValue(nameof(WindAdvectionSpeed), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, OtherParametersGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1)]
-        public float HomelessNoisePollution { get; set; } = 50;
+        [SettingsUISlider(min = 0, max = 10, step = 0.1f, unit = Unit.kFloatSingleFraction)]
+        public float DistanceExponent
+        {
+            get => GetValue(nameof(DistanceExponent), () => VanillaDataFromStorage.m_DistanceExponent);
+            set => SetValue(nameof(DistanceExponent), value, ApplyAndSave);
+        }
+
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, OtherParametersGroup)]
-        [SettingsUISlider(min = 0, max = 100, step = 1, unit = Unit.kPercentage)]
-        public float GroundPollutionLandValueDivisor { get; set; } = 100;
+        [SettingsUISlider(min = 0, max = 100, step = 1, unit= Unit.kInteger)]
+        public float HomelessNoisePollution
+        {
+            get => GetValue(nameof(HomelessNoisePollution), () => VanillaDataFromStorage.m_HomelessNoisePollution);
+            set => SetValue(nameof(HomelessNoisePollution), value, ApplyAndSave);
+        }
+
+
+        [SettingsUIAdvanced]
+        [SettingsUISection(ParametersTab, OtherParametersGroup)]
+        [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kInteger)]
+        public float GroundPollutionLandValueDivisor
+        {
+            get => GetValue(nameof(GroundPollutionLandValueDivisor), () => VanillaDataFromStorage.m_GroundPollutionLandValueDivisor);
+            set => SetValue(nameof(GroundPollutionLandValueDivisor), value, ApplyAndSave);
+        }
 
         [SettingsUIAdvanced]
         [SettingsUISection(ParametersTab, OtherParametersGroup)]
@@ -425,63 +587,61 @@ namespace NoPollution
         {
             set
             {
-                // Reset only advanced parameters
-                ResetAdvancedParameters();
+                SetAdvancedParametersToDefault();
+                ApplyAndSave();
             }
         }
 
        
-        // Methods
-        private void ResetAdvancedParameters()
+        
+        
+       
+        public void SetAdvancedParametersToDefault()
         {
-            // Reset multipliers
-            GroundMultiplier = 20;
-            AirMultiplier = 25;
-            NoiseMultiplier = 100;
-            NetAirMultiplier = 1.75f;
-            NetNoiseMultiplier = 5;
+             GroundMultiplier = 20;
+            AirMultiplier = 40;
+            NoiseMultiplier = 250;
+            NetAirMultiplier = 1f;
+            NetNoiseMultiplier = 2;
             PlantAirMultiplier = 0.001f;
             PlantGroundMultiplier = 0.001f;
             FertilityGroundMultiplier = 1;
             AbandonedNoisePollutionMultiplier = 5;
-
-            // Reset radii
             AirRadius = 100;
-            GroundRadius = 100;
-            NoiseRadius = 100;
-            NetNoiseRadius = 8;
-
-            // Reset fades
-            AirFade = 100;
-            GroundFade = 100;
+            GroundRadius = 500;
+            NoiseRadius = 600;
+            NetNoiseRadius = 3;
+            AirFade = 5000;
+            GroundFade = 4000;
             PlantFade = 2;
-
-            // Reset notification limits
             AirPollutionNotificationLimit = -7;
             NoisePollutionNotificationLimit = -7;
             GroundPollutionNotificationLimit = -7;
-
-            // Reset other advanced parameters
-            WindAdvectionSpeed = 20;
+            WindAdvectionSpeed = 30;
             DistanceExponent = 1.5f;
             HomelessNoisePollution = 50;
-            GroundPollutionLandValueDivisor = 100;
+            GroundPollutionLandValueDivisor = 500;
         }
-
         public override void SetDefaults()
         {
-            Setting setting = Mod.m_Setting;
-            setting.GroundPollutionSlider = (float)defaultGroundPollutionPercentage;
-            setting.AirPollutionSlider = (float)defaultAirPollutionPercentage;
-            setting.NoisePollutionSlider = (float)defaultNoisePollutionPercentage;
-            setting.NetPollutionSlider1 = (float)defaultNetPollutionPercentage;
-            setting.NetPollutionSlider2 = (float)defaultNetPollutionPercentage;
-            setting.NetPollutionAccumulationSlider1 = (float)defaultNetPollutionPercentage;
-            setting.NetPollutionAccumulationSlider2 = (float)defaultNetPollutionPercentage;
-
+            
+            GroundPollutionSlider = (float)defaultGroundPollutionPercentage;
+            AirPollutionSlider = (float)defaultAirPollutionPercentage;
+            NoisePollutionSlider = (float)defaultNoisePollutionPercentage;
+            NetPollutionSlider1 = defaultNetPollutionPercentage;
+            NetPollutionSlider2 = defaultNetPollutionPercentage;
+            NetPollutionAccumulationSlider1 = defaultNetPollutionPercentage;
+            NetPollutionAccumulationSlider2 = defaultNetPollutionPercentage;
             WaterPollutionDecayRateSlider = 10;
+            
+           
         }
-
+        [Exclude]
+        public bool Changes = false;
+        public void ApplyChanges()
+        {
+            Changes = true;
+        }
         // Locale Class
         public class LocaleEN : IDictionarySource
         {
@@ -500,19 +660,25 @@ namespace NoPollution
                     { m_Setting.GetOptionTabLocaleID(ParametersTab), "Parameters" },
 
                     // Group Labels
-                    { m_Setting.GetOptionGroupLocaleID(Setting.NoisePollutionGroup), "Noise Pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.NetPollutionGroup), "Net pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.GroundPollutionGroup), "Ground pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.GroundwaterPollutionGroup), "Groundwater pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.AirPollutionGroup), "Air pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.WaterPollutionGroup), "Water pollution" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.MultipliersGroup), "Multipliers" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.RadiusGroup), "Radii's" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.FadesGroup), "Fades" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.NotificationLimitsGroup), "Notification Limits" },
-                    { m_Setting.GetOptionGroupLocaleID(Setting.OtherParametersGroup), "Other" },
+                    { m_Setting.GetOptionGroupLocaleID(LegacyGroup), "Legacy" },
+                    { m_Setting.GetOptionGroupLocaleID(NoisePollutionGroup), "Noise Pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(NetPollutionGroup), "Net pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(GroundPollutionGroup), "Ground pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(GroundwaterPollutionGroup), "Groundwater pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(AirPollutionGroup), "Air pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(WaterPollutionGroup), "Water pollution" },
+                    { m_Setting.GetOptionGroupLocaleID(MultipliersGroup), "Multipliers" },
+                    { m_Setting.GetOptionGroupLocaleID(RadiusGroup), "Radii's" },
+                    { m_Setting.GetOptionGroupLocaleID(FadesGroup), "Fades" },
+                    { m_Setting.GetOptionGroupLocaleID(NotificationLimitsGroup), "Notification Limits" },
+                    { m_Setting.GetOptionGroupLocaleID(OtherParametersGroup), "Other" },
                     
                     
+                    //Legacy Group
+                    { m_Setting.GetOptionLabelLocaleID(nameof(LegacyButton)), "Legacy" },
+                    { m_Setting.GetOptionDescLocaleID(nameof(LegacyButton)), "When pressed reverts the value for industrial manufacturing zoning to pre 1.3.6" },
+                    { m_Setting.GetOptionLabelLocaleID(nameof(CurrentButton)), "Current" },
+                    { m_Setting.GetOptionDescLocaleID(nameof(CurrentButton)), "When pressed reverts the value for industrial manufacturing zoning to the current version" },
                     
                     // Air Pollution Group
                     { m_Setting.GetOptionLabelLocaleID(nameof(AirPollutionToggle)), "Air pollution producers" },
